@@ -23,6 +23,7 @@
 		<module>core</module>
 		<module>appbuild</module>
 		<module>api</module>
+		<module>ui</module>
 	</modules>
 
 	<dependencies>
