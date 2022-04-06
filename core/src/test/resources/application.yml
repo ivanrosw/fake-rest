@@ -4,9 +4,6 @@ logging:
     org.springframework: INFO
     io.github.ivanrosw.fakerest: TRACE
 
-server:
-  port: 8450
-
 management:
   endpoints:
     web:
@@ -73,7 +70,7 @@ rest:
       method: GET
     -
       uri: '/test'
-      toUrl: 'http://localhost:8450/test/'
+      toUrl: '/test/'
       method: POST
     -
       uri: '/test5'
