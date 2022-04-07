@@ -19,10 +19,10 @@ import java.net.URISyntaxException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestPropertySource(properties = {"spring.config.location = classpath:application.yml"})
+@TestPropertySource(properties = {"spring.config.location = classpath:controller-tests.yml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(classes = FakeRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class FakeRestApplicationTests {
+class ControllersTests {
 
 	private static final String ID_PARAM = "id";
 	private static final String BAD_ID = "bad_id";

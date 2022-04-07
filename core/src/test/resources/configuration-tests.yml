@@ -1,0 +1,5 @@
+---
+rest:
+  controllers:
+    - uri: '/test/'
+      method: GET
