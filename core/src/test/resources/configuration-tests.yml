@@ -3,3 +3,7 @@ rest:
   controllers:
     - uri: '/test/'
       method: GET
+  routers:
+    - uri: '/test'
+      toUrl: '/test/'
+      method: GET

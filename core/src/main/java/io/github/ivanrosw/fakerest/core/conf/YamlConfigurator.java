@@ -20,6 +20,8 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Paths;
 
@@ -188,19 +190,35 @@ public class YamlConfigurator {
         String result = null;
         for (PropertySource<?> source : propertySources) {
             String sourceName = source.getName();
-
-            if (sourceName.contains("Config resource 'file") && !sourceName.contains("classpath")) {
-                String filePath = sourceName.substring(sourceName.indexOf("[") + 1, sourceName.indexOf("]"));
-                if (Paths.get(filePath).isAbsolute()) {
-                    result = filePath;
-                } else {
-                    result = decodedPath + File.separator + filePath;
+            if (sourceName.contains("Config resource '")) {
+                result = getYamlPath(decodedPath, sourceName);
+                if (result != null) {
+                    break;
                 }
-                break;
             }
         }
 
         return result == null ? decodedPath + File.separator + YAML_NAME : result;
+    }
+
+    private String getYamlPath(String projectFolder, String sourceName) {
+        String result = null;
+        String filePath = sourceName.substring(sourceName.indexOf("[") + 1, sourceName.indexOf("]"));
+
+        if (sourceName.contains("classpath")) {
+            URL classPath = getClass().getClassLoader().getResource(filePath);
+            if (classPath != null) filePath = new File(classPath.getFile()).getAbsolutePath();
+        }
+
+        if (!Paths.get(filePath).isAbsolute()) {
+            filePath = projectFolder + File.separator + filePath;
+        }
+
+        File file = new File(filePath);
+        if (file.exists() && file.canWrite()) {
+            result = filePath;
+        }
+        return result;
     }
 
     private void writeConfig(ObjectNode conf) {
