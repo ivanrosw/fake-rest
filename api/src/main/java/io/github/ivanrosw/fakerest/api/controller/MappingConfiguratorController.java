@@ -50,7 +50,7 @@ public class MappingConfiguratorController {
     private class ControllerAdder implements UpdateProcessor<ControllerConfig> {
         @Override
         public String process(ControllerConfig conf) throws ConfigException {
-            configurator.initController(conf);
+            configurator.registerController(conf);
             return jsonUtils.toObjectNode(conf).toString();
         }
     }
@@ -63,7 +63,7 @@ public class MappingConfiguratorController {
         @Override
         public String process(String id) throws ConfigException {
             ControllerConfig conf = configurator.getControllerCopy(id);
-            configurator.deleteController(conf);
+            configurator.unregisterController(id);
             return jsonUtils.toObjectNode(conf).toString();
         }
     }
@@ -94,7 +94,7 @@ public class MappingConfiguratorController {
     private class RouterAdder implements UpdateProcessor<RouterConfig> {
         @Override
         public String process(RouterConfig conf) throws ConfigException {
-            configurator.initRouter(conf);
+            configurator.registerRouter(conf);
             return jsonUtils.toObjectNode(conf).toString();
         }
     }
@@ -107,7 +107,7 @@ public class MappingConfiguratorController {
         @Override
         public String process(String id) throws ConfigException {
             RouterConfig conf = configurator.getRouterCopy(id);
-            configurator.deleteRouter(conf);
+            configurator.unregisterRouter(id);
             return jsonUtils.toObjectNode(conf).toString();
         }
     }

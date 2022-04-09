@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 
 @Slf4j
 @AllArgsConstructor
-public class RouterController {
+public class RouterController implements BaseController {
 
     private static final String LOG_INFO = "Got router request \r\nMethod: [{}] \r\nUri: [{}]\r\nTo url:[{}] \r\nBody: [{}] \r\nHeaders: [{}]";
 
