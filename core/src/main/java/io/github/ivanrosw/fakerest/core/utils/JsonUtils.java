@@ -28,24 +28,24 @@ public class JsonUtils {
         return mapper.createArrayNode();
     }
 
-    private <T> T toJson(String json, Class<T> type) {
+    public <T> T toObject(String json, Class<T> type) {
         T result = null;
         if (json != null) {
             try {
                 result = mapper.readValue(json, type);
             } catch (Exception e) {
-                log.error("Error while converting string to json", e);
+                log.error("Error while converting string to object", e);
             }
         }
         return result;
     }
 
     public JsonNode toJsonNode(String json) {
-        return toJson(json, JsonNode.class);
+        return toObject(json, JsonNode.class);
     }
 
     public ObjectNode toObjectNode(String json) {
-        return toJson(json, ObjectNode.class);
+        return toObject(json, ObjectNode.class);
     }
 
     public <T> ObjectNode toObjectNode(T obj) {
