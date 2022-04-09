@@ -2,6 +2,7 @@ package io.github.ivanrosw.fakerest.core.controller;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.ivanrosw.fakerest.core.model.GeneratorPattern;
+import io.github.ivanrosw.fakerest.core.utils.IdGenerator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -14,6 +15,8 @@ import java.util.Map;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostController extends FakeModifyController {
+
+    private IdGenerator idGenerator;
 
     @Override
     protected ResponseEntity<String> handleOne(HttpServletRequest request, String body) {

@@ -36,7 +36,7 @@ public class MappingConfiguration {
     private void initControllers() throws ConfigException {
         if (controllers != null) {
             for (ControllerConfig conf : controllers) {
-                configurator.initController(conf);
+                configurator.registerController(conf);
             }
         }
     }
@@ -44,7 +44,7 @@ public class MappingConfiguration {
     private void initRouters() throws ConfigException {
         if (routers != null) {
             for (RouterConfig conf : routers) {
-                configurator.initRouter(conf);
+                configurator.registerRouter(conf);
             }
         }
     }

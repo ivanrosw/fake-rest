@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public abstract class FakeController {
+public abstract class FakeController implements BaseController {
 
     protected static final String KEY_ALREADY_EXIST = "key [%s] already exist";
     protected static final String DATA_NOT_JSON = "data [%s] is not json";
@@ -31,9 +31,6 @@ public abstract class FakeController {
 
     protected JsonUtils jsonUtils;
     protected HttpUtils httpUtils;
-    protected IdGenerator idGenerator;
-
-    public abstract ResponseEntity<String> handle(HttpServletRequest request);
 
     protected void delay() {
         if (controllerConfig.getDelayMs() > 0) {

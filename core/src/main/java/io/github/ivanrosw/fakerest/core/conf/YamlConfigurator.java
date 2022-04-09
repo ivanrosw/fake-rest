@@ -11,13 +11,19 @@ import io.github.ivanrosw.fakerest.core.model.RouterConfig;
 import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Paths;
 
 @Slf4j
 @Component
@@ -39,6 +45,8 @@ public class YamlConfigurator {
 
     @Autowired
     private JsonUtils jsonUtils;
+    @Autowired
+    private ConfigurableEnvironment env;
 
     @PostConstruct
     private void init() {
@@ -175,9 +183,42 @@ public class YamlConfigurator {
     }
 
     private String getYamlPath() throws UnsupportedEncodingException {
-        String path = System.getProperty("user.dir");
-        String decodedPath = URLDecoder.decode(path, "UTF-8");
-        return decodedPath + File.separator + YAML_NAME;
+        String projectPath = System.getProperty("user.dir");
+        String decodedPath = URLDecoder.decode(projectPath, "UTF-8");
+        MutablePropertySources propertySources = env.getPropertySources();
+
+        String result = null;
+        for (PropertySource<?> source : propertySources) {
+            String sourceName = source.getName();
+            if (sourceName.contains("Config resource '")) {
+                result = getYamlPath(decodedPath, sourceName);
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+
+        return result == null ? decodedPath + File.separator + YAML_NAME : result;
+    }
+
+    private String getYamlPath(String projectFolder, String sourceName) {
+        String result = null;
+        String filePath = sourceName.substring(sourceName.indexOf("[") + 1, sourceName.indexOf("]"));
+
+        if (sourceName.contains("classpath")) {
+            URL classPath = getClass().getClassLoader().getResource(filePath);
+            if (classPath != null) filePath = new File(classPath.getFile()).getAbsolutePath();
+        }
+
+        if (!Paths.get(filePath).isAbsolute()) {
+            filePath = projectFolder + File.separator + filePath;
+        }
+
+        File file = new File(filePath);
+        if (file.exists() && file.canWrite()) {
+            result = filePath;
+        }
+        return result;
     }
 
     private void writeConfig(ObjectNode conf) {
