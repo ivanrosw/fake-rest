@@ -1,22 +1,8 @@
-/*
- * Copyright (C) 2021 Ivan Rosinskii
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.github.ivanrosw.fakerest.core.controller;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.ivanrosw.fakerest.core.model.GeneratorPattern;
+import io.github.ivanrosw.fakerest.core.utils.IdGenerator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -29,6 +15,8 @@ import java.util.Map;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostController extends FakeModifyController {
+
+    private IdGenerator idGenerator;
 
     @Override
     protected ResponseEntity<String> handleOne(HttpServletRequest request, String body) {
@@ -71,7 +59,7 @@ public class PostController extends FakeModifyController {
         Map<String, GeneratorPattern> generatorPatterns = controllerConfig.getGenerateIdPatterns();
         controllerConfig.getIdParams().forEach(idParam -> {
             GeneratorPattern pattern = generatorPatterns == null ? null : generatorPatterns.get(idParam);
-            jsonUtils.putString(data, idParam, generatorUtils.generateId(pattern));
+            jsonUtils.putString(data, idParam, idGenerator.generateId(pattern));
         });
     }
 
