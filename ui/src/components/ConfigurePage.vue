@@ -1,10 +1,14 @@
 <template>
+  <NavigationMenu></NavigationMenu>
   <p>Configure</p>
 </template>
 
 <script>
+import NavigationMenu from "@/components/NavigationMenu";
+
 export default {
-  name: "ConfigurePage"
+  name: "ConfigurePage",
+  components: {NavigationMenu}
 }
 </script>
 
