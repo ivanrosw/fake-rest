@@ -8,7 +8,12 @@ import NavigationMenu from "@/components/NavigationMenu";
 
 export default {
   name: "ConfigurePage",
-  components: {NavigationMenu}
+  components: {NavigationMenu},
+  data() {
+    return {
+      bodyBackgroundClass: 'pages-body'
+    }
+  }
 }
 </script>
 

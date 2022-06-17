@@ -15,6 +15,12 @@ body {
 
 .home-body {
   height: 100vh;
-  background-image: linear-gradient(to right bottom, #001524, #002d3f, #004650, #006054, #09794c);
+  background-image: linear-gradient(to right bottom, rgb(0, 21, 36), rgb(0, 45, 63), rgb(0, 70, 80), rgb(0, 96, 84), rgb(9, 121, 76));
+}
+
+.pages-body {
+  height: 100vh;
+  
+  background: black;
 }
 </style>

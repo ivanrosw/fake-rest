@@ -12,13 +12,10 @@
 <script>
 export default {
   name: "HomePage",
-  beforeRouteEnter(to, from, next) {
-    window.document.body.className = 'home-body';
-    next();
-  },
-  beforeRouteLeave(to, from, next) {
-    window.document.body.className = '';
-    next();
+  data() {
+    return {
+      bodyBackgroundClass: 'home-body'
+    }
   }
 }
 

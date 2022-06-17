@@ -7,7 +7,12 @@
 import NavigationMenu from "@/components/NavigationMenu";
 export default {
   name: "SendPage",
-  components: {NavigationMenu}
+  components: {NavigationMenu},
+  data() {
+    return {
+      bodyBackgroundClass: 'pages-body'
+    }
+  }
 }
 </script>
 

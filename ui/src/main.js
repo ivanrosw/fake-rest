@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createApp } from 'vue'
 import * as VueRouter from 'vue-router'
 
@@ -19,3 +20,12 @@ const router = VueRouter.createRouter({
 createApp(App)
     .use(router)
     .mount('#app')
+
+router.beforeEach( (to) => {
+    let backgroundClass = to.matched[0].components.default.data?.().bodyBackgroundClass
+    if (backgroundClass) {
+        window.document.body.className = backgroundClass;
+    } else {
+        window.document.body.className = '';
+    }
+})
