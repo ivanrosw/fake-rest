@@ -3,6 +3,7 @@
   <PageDiv>
     <div class="configuration-table-container">
       <h1 style="font-family: 'Merriweather', serif; font-weight: bold">Configure</h1>
+      <h3 style="font-family: 'Merriweather', serif; font-weight: bold">Controllers</h3>
       <div class="configuration-button-add configuration-button" v-on:click="getControllers">
         <p>+</p>
       </div>
@@ -10,7 +11,7 @@
         <thead>
           <tr>
             <th>Method</th>
-            <th>Links</th>
+            <th>Uri</th>
             <th>Actions</th>
           </tr>
         </thead>
