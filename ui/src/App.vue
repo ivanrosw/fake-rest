@@ -15,12 +15,11 @@ body {
 
 .home-body {
   height: 100vh;
-  background-image: linear-gradient(to right bottom, rgb(0, 21, 36), rgb(0, 45, 63), rgb(0, 70, 80), rgb(0, 96, 84), rgb(9, 121, 76));
+  background-image: linear-gradient(to right bottom, #2c2617, #4f452b, #746641, #9c8958, #c6ae70);
 }
 
 .pages-body {
   height: 100vh;
-  
-  background: black;
+  background: #c9c4bd;
 }
 </style>

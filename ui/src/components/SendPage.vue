@@ -1,13 +1,14 @@
 <template>
-  <NavigationMenu></NavigationMenu>
-  <p>Send</p>
+  <NavigationMenu/>
+  <PageDiv></PageDiv>
 </template>
 
 <script>
 import NavigationMenu from "@/components/NavigationMenu";
+import PageDiv from "@/components/PageDiv";
 export default {
   name: "SendPage",
-  components: {NavigationMenu},
+  components: {PageDiv, NavigationMenu},
   data() {
     return {
       bodyBackgroundClass: 'pages-body'

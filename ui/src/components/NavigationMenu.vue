@@ -39,7 +39,7 @@ export default {
 .navigation-menu {
   display: block;
   position: fixed;
-  left: 85%;
+  left: 86%;
   height: 90%;
   width: 100%;
   z-index: 99999;
@@ -47,11 +47,11 @@ export default {
 
 .navigation-menu-open-button {
   position: fixed;
-  background: #001C2C;
+  background: #4F452BFF;
   height: 4vh;
   width: 4vh;
   margin-top: 0.4%;
-  margin-left: 12%;
+  margin-left: 11%;
   z-index: 199999;
   border: 1px solid rgba(0,0,0,0.0);
   border-radius: 0.4em;
@@ -59,7 +59,7 @@ export default {
 }
 
 .navigation-menu-open-button:hover {
-  box-shadow: 1em 0 2em rgba(0, 59, 56);
+  box-shadow: 1em 0 2em #746641FF;
 }
 
 .navigation-menu-open-block-container {
@@ -73,7 +73,7 @@ export default {
   width: 80%;
   margin-left: 11%;
   margin-top: 10%;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255, 255, 255);
 }
 
 .navigation-menu-list {
@@ -81,11 +81,11 @@ export default {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-image: linear-gradient(to right bottom, #001524, #002d3f, #004650, #006054, #09794c);
+  background-image: linear-gradient(to right bottom, #2c2617, #4f452b, #746641, #9c8958, #c6ae70);
 }
 
 .navigation-menu-list-slide-enter-active {
-  animation: navigation-menu-list-slide-in 1s;
+  animation: navigation-menu-list-slide-in 0.8s;
 }
 
 @keyframes navigation-menu-list-slide-in {
