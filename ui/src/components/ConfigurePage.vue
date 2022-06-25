@@ -192,8 +192,7 @@ export default {
   },
   methods: {
     getCurrentHost() {
-      //return window.location.host
-      return 'localhost:8450'
+      return window.location.host
     },
 
     compareControllers(a, b) {
