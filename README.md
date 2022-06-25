@@ -34,6 +34,7 @@ Controllers configuration contains parameters:
 - DelayMs - time to delay answer
 
 Controller works in 2 modes:
+
 - Static - return specified data from 'answer' or request body that you send.
 - Collection - services with collection, where you can make CRUD operations
 
@@ -42,7 +43,7 @@ Example static configuration:
 | Method                 |Uri       |Real mapped Uri|Answer        | Function                                             |
 |------------------------|----------|-------------- |--------------|------------------------------------------------------|
 | GET, POST, PUT, DELETE |/test     |/test          |example       | Return 'example'                                     |
-| POST, PUT, DELETE      |/test     |/test          |              | Return data from body or Bad Request if body is empty |
+| POST, PUT, DELETE      |/test     |/test          |              | Return data from body or Bad Request if body is empty|
 | GET                    |/test     |/test          |              | Return empty answer                                  |
 
 For collection mode should configure uri with id in brackets '{', '}'. Id param can have any name.
@@ -73,6 +74,6 @@ If you configure method like GET, router will consume GET and send request to to
 
 Example routers configuration:
 
-|Method|Uri       |ToUrl    |Function                                         |
-|------|----------|---------|-------------------------------------------------|
-|GET   |/test/{id}|/test    |Resend from uri with pattern to static controller|
+|Method|Uri       |ToUrl    |Function                                          |
+|------|----------|---------|--------------------------------------------------|
+|GET   |/test/{id}|/test    |Resends from uri with pattern to static controller|
