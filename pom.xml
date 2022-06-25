@@ -10,10 +10,10 @@
 	</parent>
 	<packaging>pom</packaging>
 
-	<groupId>io.github.ivanrosw</groupId>
+	<groupId>io.github.ivanrosw.fakerest</groupId>
 	<artifactId>fakerest</artifactId>
 	<name>fakerest</name>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 
 	<properties>
 		<java.version>8</java.version>
