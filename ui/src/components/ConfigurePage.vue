@@ -7,7 +7,8 @@
       <!-- Controllers -->
       <div class="flex-form">
         <h3 class="header">Controllers</h3>
-        <div class="configuration-button-add configuration-button" v-on:click="confControllerVisible = !confControllerVisible">
+        <div class="configuration-button-add configuration-button" v-on:click="confControllerVisible = !confControllerVisible;
+                                                                               cId = -1">
           <p>+</p>
         </div>
         <form class="add-config-form" @submit="submitController" v-if="confControllerVisible">
@@ -102,7 +103,8 @@
       <!-- Routers -->
       <div class="flex-form">
         <h3 class="header">Routers</h3>
-        <div class="configuration-button-add configuration-button" v-on:click="confRouterVisible = !confRouterVisible">
+        <div class="configuration-button-add configuration-button" v-on:click="confRouterVisible = !confRouterVisible;
+                                                                               rId = -1">
           <p>+</p>
         </div>
         <form class="add-config-form" @submit="submitRouter" v-if="confRouterVisible">
