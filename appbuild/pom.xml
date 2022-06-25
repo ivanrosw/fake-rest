@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>fakerest</artifactId>
-        <groupId>io.github.ivanrosw</groupId>
-        <version>1.0.2</version>
+        <groupId>io.github.ivanrosw.fakerest</groupId>
+        <version>1.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,26 +13,32 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.github.ivanrosw</groupId>
+            <groupId>io.github.ivanrosw.fakerest</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.ivanrosw</groupId>
+            <groupId>io.github.ivanrosw.fakerest</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>io.github.ivanrosw</groupId>
+                    <groupId>io.github.ivanrosw.fakerest</groupId>
                     <artifactId>core</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.github.ivanrosw.fakerest</groupId>
+            <artifactId>ui</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>FakeRest</finalName>
         <plugins>
+            <!-- Build -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -44,6 +50,10 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
+                        <exclude>
+                            <groupId>io.github.ivanrosw.fakerest</groupId>
+                            <artifactId>ui</artifactId>
+                        </exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -51,6 +61,33 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Copy front -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-front</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/resources/public</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>${project.parent.basedir}/ui/target/dist</directory>
+                                    <includes>
+                                        <include>static/</include>
+                                        <include>index.html</include>
+                                        <include>favicon.ico</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

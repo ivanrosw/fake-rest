@@ -29,41 +29,38 @@
             <option>Static</option>
             <option>Dynamic</option>
           </select>
+
           <p>Uri</p>
+          <input v-if="cMode === 'Static'" type="text" v-model="cUri" placeholder="/example"/>
+          <input v-if="cMode === 'Dynamic'" type="text" v-model="cUri" placeholder="/example/{id-name}/{id-name2}"
+                 v-on:input="calculateControllerIdsFromUri"/>
 
-          <div v-if="cMode === 'Static'">
-            <input type="text" v-model="cUri" placeholder="/example"/>
-            <p>Answer</p>
-            <input type="text" v-model="cAnswer" placeholder="Enter static answer"/>
-          </div>
+          <p>Answer</p>
+          <input type="text" v-model="cAnswer" placeholder="Enter static answer"/>
 
-          <div v-if="cMode === 'Dynamic'">
-            <input v-if="cMode === 'Dynamic'" type="text" v-model="cUri" placeholder="/example/{id-name}/{id-name2}"
-                   v-on:input="calculateControllerIdsFromUri"/>
-            <div v-if="cMethod === 'POST'">
-              <p>Generate id</p>
-              <select v-model="cGenerateId">
-                <option :value="true">Yes</option>
-                <option :value="false">No</option>
-              </select>
-              <div v-if="cGenerateId === true">
-                <p>Id patterns</p>
-                <table class="configuration-table">
-                  <thead>
-                  <th>Id</th>
-                  <th>Pattern</th>
-                  </thead>
-                  <tbody v-for="(id, index) in cIdParams" v-bind:key="index">
-                  <td>{{ id }}</td>
-                  <td>
-                    <select v-model="cIdPatterns[index]">
-                      <option>UUID</option>
-                      <option>SEQUENCE</option>
-                    </select>
-                  </td>
-                  </tbody>
-                </table>
-              </div>
+          <div v-if="cMethod === 'POST'">
+            <p>Generate id</p>
+            <select v-model="cGenerateId">
+              <option :value="true">Yes</option>
+              <option :value="false">No</option>
+            </select>
+            <div v-if="cGenerateId === true">
+              <p>Id patterns</p>
+              <table class="configuration-table">
+                <thead>
+                <th>Id</th>
+                <th>Pattern</th>
+                </thead>
+                <tbody v-for="(id, index) in cIdParams" v-bind:key="index">
+                <td>{{ id }}</td>
+                <td>
+                  <select v-model="cIdPatterns[index]">
+                    <option>UUID</option>
+                    <option>SEQUENCE</option>
+                  </select>
+                </td>
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -194,8 +191,7 @@ export default {
   },
   methods: {
     getCurrentHost() {
-      //return window.location.host
-      return 'localhost:8450'
+      return window.location.host
     },
 
     compareControllers(a, b) {
@@ -310,11 +306,13 @@ export default {
       let controller = {
         uri: this.cUri,
         method: this.cMethod,
-        answer: this.cAnswer,
         delayMs: this.cDelayMs,
         idParams: this.cIdParams,
         generateId: this.cGenerateId,
         generateIdPatterns: idParamsPatterns
+      }
+      if (this.cAnswer && this.cAnswer.length > 0) {
+        controller.answer = this.cAnswer
       }
 
       let url = 'http://' + this.getCurrentHost() + '/api/conf/mapping/controller'
