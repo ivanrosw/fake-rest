@@ -3,6 +3,7 @@ package io.github.ivanrosw.fakerest.core;
 import io.github.ivanrosw.fakerest.core.conf.ConfigException;
 import io.github.ivanrosw.fakerest.core.conf.MappingConfigurator;
 import io.github.ivanrosw.fakerest.core.model.ControllerConfig;
+import io.github.ivanrosw.fakerest.core.model.ControllerFunctionMode;
 import io.github.ivanrosw.fakerest.core.model.RouterConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ class MappingConfiguratorTest {
 					"  controllers:\n" +
 					"    - uri: '/test/'\n" +
 					"      method: GET\n" +
+					"      functionMode: READ\n" +
 					"  routers:\n" +
 					"    - uri: '/test'\n" +
 					"      toUrl: '/test/'\n" +
@@ -53,6 +55,7 @@ class MappingConfiguratorTest {
 		ControllerConfig config = new ControllerConfig();
 		config.setMethod(RequestMethod.GET);
 		config.setUri(NEW_URL_PATH);
+		config.setFunctionMode(ControllerFunctionMode.READ);
 		mappingConfigurator.registerController(config);
 		assertThat(mappingConfigurator.getAllControllersCopy()).hasSize(2);
 	}
@@ -69,6 +72,7 @@ class MappingConfiguratorTest {
 		ControllerConfig config = new ControllerConfig();
 		config.setMethod(RequestMethod.GET);
 		config.setUri(EXIST_URL_PATH);
+		config.setFunctionMode(ControllerFunctionMode.READ);
 
 		Exception exception = null;
 		try {

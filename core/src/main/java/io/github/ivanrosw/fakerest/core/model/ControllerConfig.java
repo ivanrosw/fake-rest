@@ -16,6 +16,8 @@ import java.util.Map;
 @ToString
 public class ControllerConfig extends BaseUriConfig implements Copyable<ControllerConfig> {
 
+    private ControllerFunctionMode functionMode;
+
     private String answer;
 
     private long delayMs;
@@ -37,6 +39,7 @@ public class ControllerConfig extends BaseUriConfig implements Copyable<Controll
         copy.setId(this.getId());
         copy.setUri(this.getUri());
         copy.setMethod(this.getMethod());
+        copy.setFunctionMode(this.functionMode);
         copy.setAnswer(this.answer);
         copy.setDelayMs(this.delayMs);
         copy.setIdParams(new ArrayList<>(this.idParams));

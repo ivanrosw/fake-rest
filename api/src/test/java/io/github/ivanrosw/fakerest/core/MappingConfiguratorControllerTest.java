@@ -2,6 +2,7 @@ package io.github.ivanrosw.fakerest.core;
 
 import io.github.ivanrosw.fakerest.api.FakeRestApiApplication;
 import io.github.ivanrosw.fakerest.core.model.ControllerConfig;
+import io.github.ivanrosw.fakerest.core.model.ControllerFunctionMode;
 import io.github.ivanrosw.fakerest.core.model.RouterConfig;
 import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
 import io.github.ivanrosw.fakerest.core.utils.RestClient;
@@ -65,6 +66,7 @@ class MappingConfiguratorControllerTest {
 					"  controllers:\n" +
 					"    - uri: '/test/'\n" +
 					"      method: GET\n" +
+					"      functionMode: READ\n" +
 					"  routers:\n" +
 					"    - uri: '/test'\n" +
 					"      toUrl: '/test/'\n" +
@@ -100,6 +102,7 @@ class MappingConfiguratorControllerTest {
 		ControllerConfig config = new ControllerConfig();
 		config.setMethod(RequestMethod.GET);
 		config.setUri(NEW_URL_PATH);
+		config.setFunctionMode(ControllerFunctionMode.READ);
 
 		URI uri = new URI(baseUrl + BASE_CONTROLLER_URL);
 		HttpHeaders headers = new HttpHeaders();
@@ -117,6 +120,7 @@ class MappingConfiguratorControllerTest {
 		ControllerConfig config = new ControllerConfig();
 		config.setMethod(RequestMethod.GET);
 		config.setUri(EXIST_URL_PATH);
+		config.setFunctionMode(ControllerFunctionMode.READ);
 
 		URI uri = new URI(baseUrl + BASE_CONTROLLER_URL);
 		HttpHeaders headers = new HttpHeaders();

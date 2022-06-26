@@ -22,23 +22,35 @@
             <option>POST</option>
             <option>PUT</option>
             <option>DELETE</option>
+            <option>HEAD</option>
+            <option>PATCH</option>
+            <option>OPTIONS</option>
+            <option>TRACE</option>
           </select>
 
-          <p>Mode</p>
-          <select v-model="cMode">
+          <p>Function mode</p>
+          <select v-model="cFunctionMode">
+            <option>CREATE</option>
+            <option>READ</option>
+            <option>UPDATE</option>
+            <option>DELETE</option>
+          </select>
+
+          <p>Information Mode</p>
+          <select v-model="cSaveInfoMode">
             <option>Static</option>
-            <option>Dynamic</option>
+            <option>Collection</option>
           </select>
 
           <p>Uri</p>
-          <input v-if="cMode === 'Static'" type="text" v-model="cUri" placeholder="/example"/>
-          <input v-if="cMode === 'Dynamic'" type="text" v-model="cUri" placeholder="/example/{id-name}/{id-name2}"
+          <input v-if="cSaveInfoMode === 'Static'" type="text" v-model="cUri" placeholder="/example"/>
+          <input v-if="cSaveInfoMode === 'Collection'" type="text" v-model="cUri" placeholder="/example/{id-name}/{id-name2}"
                  v-on:input="calculateControllerIdsFromUri"/>
 
           <p>Answer</p>
           <input type="text" v-model="cAnswer" placeholder="Enter static answer"/>
 
-          <div v-if="cMethod === 'POST'">
+          <div v-if="cFunctionMode === 'CREATE' && cSaveInfoMode === 'Collection'">
             <p>Generate id</p>
             <select v-model="cGenerateId">
               <option :value="true">Yes</option>
@@ -175,7 +187,8 @@ export default {
 
       cId: -1,
       cMethod: 'GET',
-      cMode: 'Static',
+      cFunctionMode: 'CREATE',
+      cSaveInfoMode: 'Static',
       cUri: '',
       cAnswer: '',
       cDelayMs: 0,
@@ -220,7 +233,8 @@ export default {
     setDefaultControllerValues() {
       this.cId = -1
       this.cMethod = 'GET'
-      this.cMode = 'Static'
+      this.cFunctionMode = 'CREATE'
+      this.cSaveInfoMode = 'Static'
       this.cUri = ''
       this.cAnswer = ''
       this.cDelayMs = 0
@@ -306,6 +320,7 @@ export default {
       let controller = {
         uri: this.cUri,
         method: this.cMethod,
+        functionMode: this.cFunctionMode,
         delayMs: this.cDelayMs,
         idParams: this.cIdParams,
         generateId: this.cGenerateId,
@@ -343,11 +358,12 @@ export default {
       this.cId = controller.id
       this.cMethod = controller.method
       this.cUri = controller.uri
+      this.cFunctionMode = controller.functionMode
       this.calculateControllerIdsFromUri()
       if (this.cIdParams && this.cIdParams.length > 0) {
-        this.cMode = 'Dynamic'
+        this.cSaveInfoMode = 'Collection'
       } else {
-        this.cMode = 'Static'
+        this.cSaveInfoMode = 'Static'
       }
       this.cAnswer = controller.answer
       this.cDelayMs = controller.delayMs

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostController extends FakeModifyController {
+public class CreateController extends FakeModifyController {
 
     private IdGenerator idGenerator;
 

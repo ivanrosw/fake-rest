@@ -1,18 +1,14 @@
 package io.github.ivanrosw.fakerest.core.controller;
 
 import io.github.ivanrosw.fakerest.core.model.ControllerData;
-import io.github.ivanrosw.fakerest.core.model.ControllerMode;
+import io.github.ivanrosw.fakerest.core.model.ControllerSaveInfoMode;
 import io.github.ivanrosw.fakerest.core.model.ControllerConfig;
-import io.github.ivanrosw.fakerest.core.utils.IdGenerator;
 import io.github.ivanrosw.fakerest.core.utils.HttpUtils;
 import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @SuperBuilder
@@ -25,7 +21,7 @@ public abstract class FakeController implements BaseController {
 
     protected static final String DESCRIPTION_PARAM = "description";
 
-    protected ControllerMode mode;
+    protected ControllerSaveInfoMode saveInfoMode;
     protected ControllerData controllerData;
     protected ControllerConfig controllerConfig;
 

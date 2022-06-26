@@ -2,7 +2,7 @@ package io.github.ivanrosw.fakerest.core.controller;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.ivanrosw.fakerest.core.model.ControllerMode;
+import io.github.ivanrosw.fakerest.core.model.ControllerSaveInfoMode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class GetController extends FakeController {
+public class ReadController extends FakeController {
 
     private static final String LOG_INFO = "Got request \r\nMethod: [{}] \r\nUri: [{}]";
 
@@ -26,9 +26,9 @@ public class GetController extends FakeController {
         delay();
 
         ResponseEntity<String> result;
-        if (mode == ControllerMode.COLLECTION_ALL) {
+        if (saveInfoMode == ControllerSaveInfoMode.COLLECTION_ALL) {
             result = handleAll();
-        } else if (mode == ControllerMode.COLLECTION_ONE) {
+        } else if (saveInfoMode == ControllerSaveInfoMode.COLLECTION_ONE) {
             result = handleId(request);
         } else {
             result = handleNoId();
