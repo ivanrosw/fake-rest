@@ -1,6 +1,6 @@
 package io.github.ivanrosw.fakerest.core.controller;
 
-import io.github.ivanrosw.fakerest.core.model.ControllerMode;
+import io.github.ivanrosw.fakerest.core.model.ControllerSaveInfoMode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -38,7 +38,7 @@ public abstract class FakeModifyController extends FakeController {
     
     private ResponseEntity<String> processRequest(HttpServletRequest request, String body) {
         ResponseEntity<String> result;
-        if (mode == ControllerMode.COLLECTION_ONE) {
+        if (saveInfoMode == ControllerSaveInfoMode.COLLECTION_ONE) {
             result = handleOne(request, body);
         } else {
             result = returnAnswerOrBody(body);

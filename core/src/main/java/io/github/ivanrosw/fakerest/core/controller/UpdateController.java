@@ -12,7 +12,7 @@ import java.util.Map;
 
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PutController extends FakeModifyController {
+public class UpdateController extends FakeModifyController {
 
     @Override
     protected ResponseEntity<String> handleOne(HttpServletRequest request, String body) {

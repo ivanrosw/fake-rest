@@ -64,32 +64,32 @@ public class MappingConfigurator {
      */
     public void registerController(ControllerConfig conf) throws ConfigException {
         List<String> idParams = httpUtils.getIdParams(conf.getUri());
-        ControllerMode mode = identifyMode(idParams);
+        ControllerSaveInfoMode mode = identifyMode(idParams);
         beforeInitControllerCheck(conf, mode);
 
-        if (mode == ControllerMode.COLLECTION) conf.setIdParams(idParams);
+        if (mode == ControllerSaveInfoMode.COLLECTION) conf.setIdParams(idParams);
 
         UriConfigHolder<ControllerConfig> configHolder;
-        switch (conf.getMethod()) {
-            case GET:
-                configHolder = createGetControllerHolder(conf, mode);
+        switch (conf.getFunctionMode()) {
+            case READ:
+                configHolder = createReadControllerHolder(conf, mode);
                 break;
-            case POST:
-                configHolder = createPostControllerHolder(conf, mode);
+            case CREATE:
+                configHolder = createCreateControllerHolder(conf, mode);
                 break;
-            case PUT:
-                configHolder = createPutControllerHolder(conf, mode);
+            case UPDATE:
+                configHolder = createUpdateControllerHolder(conf, mode);
                 break;
             case DELETE:
                 configHolder = createDeleteControllerHolder(conf, mode);
                 break;
             default:
-                throw new ConfigException(String.format("Method [%s] not supported", conf.getMethod()));
+                throw new ConfigException(String.format("Controller: Function mode [%s] not supported", conf.getFunctionMode()));
         }
 
         registerMapping(configHolder);
         conf.setId(controllersIdGenerator.generateId(GeneratorPattern.SEQUENCE));
-        if (mode == ControllerMode.COLLECTION) loadCollectionAnswerData(conf);
+        if (mode == ControllerSaveInfoMode.COLLECTION) loadCollectionAnswerData(conf);
 
         addUrls(configHolder);
 
@@ -107,16 +107,19 @@ public class MappingConfigurator {
      * @param mode - static or collection mode
      * @throws ConfigException - if config don't contain all necessary info or url already registered
      */
-    private void beforeInitControllerCheck(ControllerConfig conf, ControllerMode mode) throws ConfigException {
+    private void beforeInitControllerCheck(ControllerConfig conf, ControllerSaveInfoMode mode) throws ConfigException {
         if (conf.getUri() == null || conf.getUri().isEmpty()) {
             throw new ConfigException("Controller: Uri must be not blank");
         }
         if (conf.getMethod() == null) {
             throw new ConfigException("Controller: Method must be specified");
         }
+        if (conf.getFunctionMode() == null) {
+            throw new ConfigException("Controller: function mode must be specified");
+        }
 
         List<String> urls = methodsUrls.computeIfAbsent(conf.getMethod(), key -> new ArrayList<>());
-        if (urls.contains(conf.getUri()) || (mode == ControllerMode.COLLECTION && urls.contains(httpUtils.getBaseUri(conf.getUri())))) {
+        if (urls.contains(conf.getUri()) || (mode == ControllerSaveInfoMode.COLLECTION && urls.contains(httpUtils.getBaseUri(conf.getUri())))) {
             throw new ConfigException(String.format("Controller: Duplicated urls: %s", conf.getUri()));
         }
     }
@@ -127,93 +130,93 @@ public class MappingConfigurator {
      * @param idParams - id params from url if it set
      * @return - static or collection mode
      */
-    private ControllerMode identifyMode(List<String> idParams) {
-        return idParams.isEmpty() ? ControllerMode.STATIC : ControllerMode.COLLECTION;
+    private ControllerSaveInfoMode identifyMode(List<String> idParams) {
+        return idParams.isEmpty() ? ControllerSaveInfoMode.STATIC : ControllerSaveInfoMode.COLLECTION;
     }
 
     /**
-     * Create config holder for get controller
+     * Create config holder for read controller
      *
      * @param conf - config with all necessary info to init controller
      * @param mode - static or collection mode
-     * @return - not ran config holder
+     * @return - config holder that haven't ran yet
      */
-    private UriConfigHolder<ControllerConfig> createGetControllerHolder(ControllerConfig conf, ControllerMode mode) {
+    private UriConfigHolder<ControllerConfig> createReadControllerHolder(ControllerConfig conf, ControllerSaveInfoMode mode) {
         Map<RequestMappingInfo, BaseController> requestMappingInfo = new HashMap<>();
         List<String> usedUrls = new ArrayList<>();
 
-        if (mode == ControllerMode.COLLECTION) {
+        if (mode == ControllerSaveInfoMode.COLLECTION) {
             String baseUri = httpUtils.getBaseUri(conf.getUri());
             RequestMappingInfo getAllMappingInfo = RequestMappingInfo
                     .paths(baseUri)
-                    .methods(RequestMethod.GET)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController getAllController = GetController.builder()
-                    .mode(ControllerMode.COLLECTION_ALL)
+            FakeController readAllController = ReadController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ALL)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
                     .httpUtils(httpUtils)
                     .build();
-            requestMappingInfo.put(getAllMappingInfo, getAllController);
+            requestMappingInfo.put(getAllMappingInfo, readAllController);
             usedUrls.add(baseUri);
 
-            RequestMappingInfo getOneMappingInfo = RequestMappingInfo
+            RequestMappingInfo readOneMappingInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.GET)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController getOneController = GetController.builder()
-                    .mode(ControllerMode.COLLECTION_ONE)
+            FakeController getOneController = ReadController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ONE)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
                     .httpUtils(httpUtils)
                     .build();
-            requestMappingInfo.put(getOneMappingInfo, getOneController);
+            requestMappingInfo.put(readOneMappingInfo, getOneController);
             usedUrls.add(conf.getUri());
 
         } else {
-            RequestMappingInfo getStaticMappingInfo = RequestMappingInfo
+            RequestMappingInfo readStaticMappingInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.GET)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController getStaticController =  GetController.builder()
-                    .mode(ControllerMode.STATIC)
+            FakeController getStaticController =  ReadController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.STATIC)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
                     .httpUtils(httpUtils)
                     .build();
-            requestMappingInfo.put(getStaticMappingInfo, getStaticController);
+            requestMappingInfo.put(readStaticMappingInfo, getStaticController);
             usedUrls.add(conf.getUri());
         }
         return new UriConfigHolder<>(conf,requestMappingInfo, usedUrls);
     }
 
     /**
-     * Create config holder for post controller
+     * Create config holder for create controller
      *
      * @param conf - config with all necessary info to init controller
      * @param mode - static or collection mode
-     * @return - not ran config holder
+     * @return - config holder that haven't ran yet
      */
-    private UriConfigHolder<ControllerConfig> createPostControllerHolder(ControllerConfig conf, ControllerMode mode) {
+    private UriConfigHolder<ControllerConfig> createCreateControllerHolder(ControllerConfig conf, ControllerSaveInfoMode mode) {
         Map<RequestMappingInfo, BaseController> requestMappingInfo = new HashMap<>();
         List<String> usedUrls = new ArrayList<>();
         IdGenerator idGenerator = new IdGenerator();
 
-        if (mode == ControllerMode.COLLECTION) {
+        if (mode == ControllerSaveInfoMode.COLLECTION) {
             String baseUri = httpUtils.getBaseUri(conf.getUri());
             RequestMappingInfo createOneInfo = RequestMappingInfo
                     .paths(baseUri)
-                    .methods(RequestMethod.POST)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController createOneController = PostController.builder()
-                    .mode(ControllerMode.COLLECTION_ONE)
+            FakeController createOneController = CreateController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ONE)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
@@ -226,11 +229,11 @@ public class MappingConfigurator {
         } else {
             RequestMappingInfo createStaticInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.POST)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController createStaticController = PostController.builder()
-                    .mode(ControllerMode.STATIC)
+            FakeController createStaticController = CreateController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.STATIC)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
@@ -244,24 +247,24 @@ public class MappingConfigurator {
     }
 
     /**
-     * Create config holder for put controller
+     * Create config holder for update controller
      *
      * @param conf - config with all necessary info to init controller
      * @param mode - static or collection mode
-     * @return - not ran config holder
+     * @return - config holder that haven't ran yet
      */
-    private UriConfigHolder<ControllerConfig> createPutControllerHolder(ControllerConfig conf, ControllerMode mode) {
+    private UriConfigHolder<ControllerConfig> createUpdateControllerHolder(ControllerConfig conf, ControllerSaveInfoMode mode) {
         Map<RequestMappingInfo, BaseController> requestMappingInfo = new HashMap<>();
         List<String> usedUrls = new ArrayList<>();
 
-        if (mode == ControllerMode.COLLECTION) {
+        if (mode == ControllerSaveInfoMode.COLLECTION) {
             RequestMappingInfo updateOneInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.PUT)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController updateOneController = PutController.builder()
-                    .mode(ControllerMode.COLLECTION_ONE)
+            FakeController updateOneController = UpdateController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ONE)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
@@ -273,11 +276,11 @@ public class MappingConfigurator {
         } else {
             RequestMappingInfo updateStaticInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.PUT)
+                    .methods(conf.getMethod())
                     .build();
 
-            FakeController updateStaticController = PutController.builder()
-                    .mode(ControllerMode.STATIC)
+            FakeController updateStaticController = UpdateController.builder()
+                    .saveInfoMode(ControllerSaveInfoMode.STATIC)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
@@ -294,20 +297,20 @@ public class MappingConfigurator {
      *
      * @param conf - config with all necessary info to init controller
      * @param mode - static or collection mode
-     * @return - not ran config holder
+     * @return - config holder that haven't ran yet
      */
-    private UriConfigHolder<ControllerConfig> createDeleteControllerHolder(ControllerConfig conf, ControllerMode mode) {
+    private UriConfigHolder<ControllerConfig> createDeleteControllerHolder(ControllerConfig conf, ControllerSaveInfoMode mode) {
         Map<RequestMappingInfo, BaseController> requestMappingInfo = new HashMap<>();
         List<String> usedUrls = new ArrayList<>();
 
-        if (mode == ControllerMode.COLLECTION) {
+        if (mode == ControllerSaveInfoMode.COLLECTION) {
             RequestMappingInfo deleteOneInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.DELETE)
+                    .methods(conf.getMethod())
                     .build();
 
             FakeController deleteOneController = DeleteController.builder()
-                    .mode(ControllerMode.COLLECTION_ONE)
+                    .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ONE)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
@@ -319,11 +322,11 @@ public class MappingConfigurator {
         } else {
             RequestMappingInfo deleteStaticInfo = RequestMappingInfo
                     .paths(conf.getUri())
-                    .methods(RequestMethod.DELETE)
+                    .methods(conf.getMethod())
                     .build();
 
             FakeController deleteStaticController = DeleteController.builder()
-                    .mode(ControllerMode.STATIC)
+                    .saveInfoMode(ControllerSaveInfoMode.STATIC)
                     .controllerData(controllerData)
                     .controllerConfig(conf)
                     .jsonUtils(jsonUtils)
