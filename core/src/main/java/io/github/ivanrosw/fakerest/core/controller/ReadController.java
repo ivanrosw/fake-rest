@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * Controller that can read data from collection
+ */
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -36,6 +39,11 @@ public class ReadController extends FakeController {
         return result;
     }
 
+    /**
+     * Process request to get all data from collection
+     *
+     * @return - response
+     */
     private ResponseEntity<String> handleAll() {
         ResponseEntity<String> result;
         Map<String, ObjectNode> allData = controllerData.getAllData(controllerConfig.getUri());
@@ -49,6 +57,12 @@ public class ReadController extends FakeController {
         return result;
     }
 
+    /**
+     * Process request to get data by id
+     *
+     * @param request - request to controller
+     * @return - response
+     */
     private ResponseEntity<String> handleId(HttpServletRequest request) {
         ResponseEntity<String> result;
 
@@ -66,7 +80,11 @@ public class ReadController extends FakeController {
         return result;
     }
 
-
+    /**
+     * Return static answer
+     *
+     * @return - response
+     */
     private ResponseEntity<String> handleNoId() {
         return new ResponseEntity<>(controllerConfig.getAnswer(), HttpStatus.OK);
     }

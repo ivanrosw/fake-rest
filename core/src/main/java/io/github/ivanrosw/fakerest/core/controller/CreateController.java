@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * Controller that can save data to collection
+ */
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateController extends FakeModifyController {
@@ -29,6 +32,12 @@ public class CreateController extends FakeModifyController {
         return result;
     }
 
+    /**
+     * Save info to collection
+     *
+     * @param body - request body
+     * @return - response
+     */
     private ResponseEntity<String> saveOne(String body) {
         ResponseEntity<String> result;
         ObjectNode bodyJson = jsonUtils.toObjectNode(body);
@@ -55,6 +64,11 @@ public class CreateController extends FakeModifyController {
         return result;
     }
 
+    /**
+     * Add id to data
+     *
+     * @param data - data from request
+     */
     private void addId(ObjectNode data) {
         Map<String, GeneratorPattern> generatorPatterns = controllerConfig.getGenerateIdPatterns();
         controllerConfig.getIdParams().forEach(idParam -> {

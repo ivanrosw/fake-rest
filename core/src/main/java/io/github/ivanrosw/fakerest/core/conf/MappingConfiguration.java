@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+/**
+ * Configuration class to load configuration from file and init
+ */
 @Slf4j
 @Configuration
 @ConfigurationProperties(prefix = "rest")

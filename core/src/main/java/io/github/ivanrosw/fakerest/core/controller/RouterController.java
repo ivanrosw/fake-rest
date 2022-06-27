@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Controller that can route requests
+ */
 @Slf4j
 @AllArgsConstructor
 public class RouterController implements BaseController {
@@ -21,6 +24,7 @@ public class RouterController implements BaseController {
     private HttpUtils httpUtils;
     private RestClient restClient;
 
+    @Override
     public ResponseEntity<String> handle(HttpServletRequest request) {
         ResponseEntity<String> result;
         try {
@@ -45,6 +49,13 @@ public class RouterController implements BaseController {
         return result;
     }
 
+    /**
+     * Create uri to route
+     *
+     * @param request - request to controller
+     * @return - uri to route
+     * @throws URISyntaxException - if something goes wrong with URI
+     */
     private URI buildUri(HttpServletRequest request) throws URISyntaxException {
         URI result;
         if (conf.getToUrl().contains("://")) {
