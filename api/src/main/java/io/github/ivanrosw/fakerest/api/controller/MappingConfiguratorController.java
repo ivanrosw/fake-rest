@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller that can handle requests to create\delete controllers\routers configurations
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/api/conf/mapping")
@@ -114,6 +117,15 @@ public class MappingConfiguratorController {
     }
 
     //GENERAL
+
+    /**
+     * Base method to process request with all checks and exception handles
+     *
+     * @param updater - way of process
+     * @param data - data to process
+     * @return - response
+     * @param <T> - class of data to process
+     */
     private <T> ResponseEntity<String> updateConfig(UpdateProcessor<T> updater, T data) {
         ResponseEntity<String> response;
         ObjectNode body;
@@ -137,6 +149,11 @@ public class MappingConfiguratorController {
         return response;
     }
 
+    /**
+     * Class to describe way of process handled configuration
+     *
+     * @param <T> - class of data to process
+     */
     private interface UpdateProcessor<T> {
         String process(T conf) throws ConfigException;
     }

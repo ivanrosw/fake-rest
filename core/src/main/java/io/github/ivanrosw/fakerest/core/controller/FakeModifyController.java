@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Base class to all controllers that can modify data in collection
+ */
 @Slf4j
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -35,7 +38,14 @@ public abstract class FakeModifyController extends FakeController {
         }
         return result;
     }
-    
+
+    /**
+     * Process handled request
+     *
+     * @param request - request to controller
+     * @param body - body from request
+     * @return - response
+     */
     private ResponseEntity<String> processRequest(HttpServletRequest request, String body) {
         ResponseEntity<String> result;
         if (saveInfoMode == ControllerSaveInfoMode.COLLECTION_ONE) {
@@ -46,6 +56,12 @@ public abstract class FakeModifyController extends FakeController {
         return result;
     }
 
+    /**
+     * Return static data
+     *
+     * @param body - body from request
+     * @return - response
+     */
     protected ResponseEntity<String> returnAnswerOrBody(String body) {
         ResponseEntity<String> result;
         if (controllerConfig.getAnswer() != null) {
@@ -58,5 +74,12 @@ public abstract class FakeModifyController extends FakeController {
         return result;
     }
 
+    /**
+     * Process request in controller with mode {@link ControllerSaveInfoMode#COLLECTION_ONE}
+     *
+     * @param request - request to controller
+     * @param body - body from request
+     * @return - response
+     */
     protected abstract ResponseEntity<String> handleOne(HttpServletRequest request, String body);
 }

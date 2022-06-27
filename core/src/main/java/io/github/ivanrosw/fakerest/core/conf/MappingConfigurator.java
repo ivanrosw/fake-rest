@@ -20,12 +20,28 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+/**
+ * Main configure class that can register new controllers and routers
+ * And it has all information about configurations
+ */
 @Slf4j
 @Component
 public class MappingConfigurator {
 
+    /**
+     * Collection with active uris
+     * Method - List of active uris
+     */
     private Map<RequestMethod, List<String>> methodsUrls;
+    /**
+     * Collection with active controllers configs
+     * Config id - controller config
+     */
     private Map<String, UriConfigHolder<ControllerConfig>> controllers;
+    /**
+     * Collection with active routers configs
+     * Config id - controller config
+     */
     private Map<String, UriConfigHolder<RouterConfig>> routers;
     private IdGenerator controllersIdGenerator;
     private IdGenerator routersIdGenerator;
@@ -450,6 +466,13 @@ public class MappingConfigurator {
         }
     }
 
+    /**
+     * Delete and stop routers
+     * Can be called from api
+     *
+     * @param id - id of configuration
+     * @throws ConfigException - if configuration with id not exist
+     */
     public void unregisterRouter(String id) throws ConfigException {
         if (!routers.containsKey(id)) {
             throw new ConfigException(String.format("Router with id [%s] not exist", id));
@@ -508,6 +531,9 @@ public class MappingConfigurator {
         urls.addAll(configHolder.getUsedUrls());
     }
 
+    /**
+     * Log active methods ands uris
+     */
     public void printUrls() {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
