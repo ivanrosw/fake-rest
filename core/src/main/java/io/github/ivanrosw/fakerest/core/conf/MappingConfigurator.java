@@ -80,7 +80,7 @@ public class MappingConfigurator {
      */
     public void registerController(ControllerConfig conf) throws ConfigException {
         List<String> idParams = httpUtils.getIdParams(conf.getUri());
-        ControllerSaveInfoMode mode = identifyMode(idParams);
+        ControllerSaveInfoMode mode = identifyMode(conf, idParams);
         beforeInitControllerCheck(conf, mode);
 
         if (mode == ControllerSaveInfoMode.COLLECTION) conf.setIdParams(idParams);
@@ -99,6 +99,9 @@ public class MappingConfigurator {
             case DELETE:
                 configHolder = createDeleteControllerHolder(conf, mode);
                 break;
+            case GROOVY:
+                configHolder = createGroovyControllerHolder(conf);
+                break;
             default:
                 throw new ConfigException(String.format("Controller: Function mode [%s] not supported", conf.getFunctionMode()));
         }
@@ -110,10 +113,11 @@ public class MappingConfigurator {
         addUrls(configHolder);
 
         controllers.put(conf.getId(), configHolder);
-        if (!yamlConfigurator.isControllerExist(conf)) {
-            yamlConfigurator.addController(conf);
+        if (!yamlConfigurator.isControllerExist(conf) && !yamlConfigurator.addController(conf)) {
+            unregisterController(conf.getId());
+        } else {
+            log.info("Registered controllers. Method: [{}],  Urls:{}", conf.getMethod(), configHolder.getUsedUrls());
         }
-        log.info("Registered controllers. Method: [{}],  Urls:{}", conf.getMethod(), configHolder.getUsedUrls());
     }
 
     /**
@@ -141,12 +145,16 @@ public class MappingConfigurator {
     }
 
     /**
-     * Identify base on identify idParams
+     * Identify save info mode base on identify idParams
      *
+     * @param conf - config of controller
      * @param idParams - id params from url if it set
-     * @return - static or collection mode
+     * @return - groovy, static or collection mode
      */
-    private ControllerSaveInfoMode identifyMode(List<String> idParams) {
+    private ControllerSaveInfoMode identifyMode(ControllerConfig conf, List<String> idParams) {
+        if (conf.getFunctionMode() == ControllerFunctionMode.GROOVY) {
+            return ControllerSaveInfoMode.GROOVY;
+        }
         return idParams.isEmpty() ? ControllerSaveInfoMode.STATIC : ControllerSaveInfoMode.COLLECTION;
     }
 
@@ -355,6 +363,34 @@ public class MappingConfigurator {
     }
 
     /**
+     * Create config holder for groovy controller
+     *
+     * @param conf - config with all necessary info to init controller
+     * @return - config holder that haven't ran yet
+     */
+    private UriConfigHolder<ControllerConfig> createGroovyControllerHolder(ControllerConfig conf) {
+        Map<RequestMappingInfo, BaseController> requestMappingInfo = new HashMap<>();
+        List<String> usedUrls = new ArrayList<>();
+
+        RequestMappingInfo groovyInfo = RequestMappingInfo
+                .paths(conf.getUri())
+                .methods(conf.getMethod())
+                .build();
+
+        GroovyController groovyController = GroovyController.builder()
+                .controllerData(controllerData)
+                .controllerConfig(conf)
+                .jsonUtils(jsonUtils)
+                .httpUtils(httpUtils)
+                .build();
+
+        requestMappingInfo.put(groovyInfo, groovyController);
+        usedUrls.add(conf.getUri());
+
+        return new UriConfigHolder<>(conf, requestMappingInfo, usedUrls);
+    }
+
+    /**
      * Load to collection of controller's data from config
      *
      * @param conf - config with all necessary info to init controller
@@ -440,10 +476,11 @@ public class MappingConfigurator {
         conf.setId(routersIdGenerator.generateId(GeneratorPattern.SEQUENCE));
         routers.put(conf.getId(), configHolder);
 
-        if (!yamlConfigurator.isRouterExist(conf)) {
-            yamlConfigurator.addRouter(conf);
+        if (!yamlConfigurator.isRouterExist(conf) && !yamlConfigurator.addRouter(conf)) {
+            unregisterRouter(conf.getId());
+        } else {
+            log.info("Registered router. Method: [{}],  Urls:{}", conf.getMethod(), configHolder.getUsedUrls());
         }
-        log.info("Registered router. Method: [{}],  Urls:{}", conf.getMethod(), configHolder.getUsedUrls());
     }
 
     /**
