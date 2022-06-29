@@ -63,9 +63,10 @@ public class YamlConfigurator {
      * Add controller config to file
      *
      * @param conf - controller config
+     * @return - config added
      */
-    void addController(ControllerConfig conf) {
-        addConfig(conf, CONTROLLERS_PARAM);
+    boolean addController(ControllerConfig conf) {
+        return addConfig(conf, CONTROLLERS_PARAM);
     }
 
     /**
@@ -93,9 +94,10 @@ public class YamlConfigurator {
      * Add router config to file
      *
      * @param conf - router config
+     * @return - config added
      */
-    void addRouter(RouterConfig conf) {
-        addConfig(conf, ROUTERS_PARAM);
+    boolean addRouter(RouterConfig conf) {
+        return addConfig(conf, ROUTERS_PARAM);
     }
 
     /**
@@ -124,17 +126,24 @@ public class YamlConfigurator {
      *
      * @param conf - config
      * @param keyParam - controller or router area
+     * @return - config added
      */
-    private void addConfig(BaseUriConfig conf, String keyParam) {
-        ObjectNode yaml = getConfig();
-        ArrayNode configs = getControllersOrRouters(yaml, keyParam);
-        ObjectNode jsonConf = jsonUtils.toObjectNode(conf);
-        jsonConf.remove(ID_PARAM);
-        configs.add(jsonConf);
-        writeConfig(yaml);
-        log.info("Added {} to config. Method: {}, uri: {}", conf instanceof ControllerConfig ? CONTROLLER_PARAM : ROUTER_PARAM,
-                                                            conf.getMethod(),
-                                                            conf.getUri());
+    private boolean addConfig(BaseUriConfig conf, String keyParam) {
+        try {
+            ObjectNode yaml = getConfig();
+            ArrayNode configs = getControllersOrRouters(yaml, keyParam);
+            ObjectNode jsonConf = jsonUtils.toObjectNode(conf);
+            jsonConf.remove(ID_PARAM);
+            configs.add(jsonConf);
+            writeConfig(yaml);
+            log.info("Added {} to config. Method: {}, uri: {}", conf instanceof ControllerConfig ? CONTROLLER_PARAM : ROUTER_PARAM,
+                    conf.getMethod(),
+                    conf.getUri());
+            return true;
+        } catch (Exception e) {
+            log.error("Error while saving config", e);
+            return false;
+        }
     }
 
     /**
@@ -161,10 +170,14 @@ public class YamlConfigurator {
         }
 
         if (isDeleted) {
-            writeConfig(yaml);
-            log.info("Deleted {} from config. Method: {}, uri: {}", conf instanceof ControllerConfig ? CONTROLLER_PARAM : ROUTER_PARAM,
-                                                                    conf.getMethod(),
-                                                                    conf.getUri());
+            try {
+                writeConfig(yaml);
+                log.info("Deleted {} from config. Method: {}, uri: {}", conf instanceof ControllerConfig ? CONTROLLER_PARAM : ROUTER_PARAM,
+                        conf.getMethod(),
+                        conf.getUri());
+            } catch (Exception e) {
+                log.error("Error while deleting config", e);
+            }
         }
     }
 
@@ -318,13 +331,9 @@ public class YamlConfigurator {
      *
      * @param conf - configuration file in json format
      */
-    private void writeConfig(ObjectNode conf) {
-        try {
-            File file = getConfigFile();
-            log.info("Writing file {}", file.getAbsolutePath());
-            mapper.writer().writeValue(getConfigFile(), conf);
-        } catch (Exception e) {
-            log.error("Error while writing config", e);
-        }
+    private void writeConfig(ObjectNode conf) throws IOException {
+        File file = getConfigFile();
+        log.info("Writing file {}", file.getAbsolutePath());
+        mapper.writer().writeValue(getConfigFile(), conf);
     }
 }

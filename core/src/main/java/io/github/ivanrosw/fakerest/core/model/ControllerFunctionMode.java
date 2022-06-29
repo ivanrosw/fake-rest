@@ -7,5 +7,6 @@ public enum ControllerFunctionMode {
     CREATE,
     READ,
     UPDATE,
-    DELETE
+    DELETE,
+    GROOVY
 }

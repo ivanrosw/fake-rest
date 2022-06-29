@@ -6,6 +6,7 @@ import io.github.ivanrosw.fakerest.core.conf.MappingConfigurator;
 import io.github.ivanrosw.fakerest.core.model.ControllerConfig;
 import io.github.ivanrosw.fakerest.core.model.RouterConfig;
 import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Controller that can handle requests to create\delete controllers\routers configurations
  */
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/api/conf/mapping")
@@ -49,6 +51,8 @@ public class MappingConfiguratorController {
 
     @PostMapping("/controller")
     public ResponseEntity<String> addController(@RequestBody ControllerConfig conf) {
+        log.info("Got request for create controller:");
+        log.info(conf.toString());
         return updateConfig(new ControllerAdder(), conf);
     }
     private class ControllerAdder implements UpdateProcessor<ControllerConfig> {
@@ -93,6 +97,8 @@ public class MappingConfiguratorController {
 
     @PostMapping("/router")
     public ResponseEntity<String> addRouter(@RequestBody RouterConfig conf) {
+        log.info("Got request for create router:");
+        log.info(conf.toString());
         return updateConfig(new RouterAdder(), conf);
     }
     private class RouterAdder implements UpdateProcessor<RouterConfig> {

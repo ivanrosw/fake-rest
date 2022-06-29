@@ -28,6 +28,8 @@ public class ControllerConfig extends BaseUriConfig implements Copyable<Controll
 
     private Map<String, GeneratorPattern> generateIdPatterns;
 
+    private String groovyScript;
+
     public ControllerConfig() {
         idParams = new ArrayList<>();
         generateIdPatterns = new HashMap<>();
@@ -45,6 +47,7 @@ public class ControllerConfig extends BaseUriConfig implements Copyable<Controll
         copy.setIdParams(new ArrayList<>(this.idParams));
         copy.setGenerateId(this.generateId);
         copy.setGenerateIdPatterns(new HashMap<>(this.generateIdPatterns));
+        copy.setGroovyScript(this.groovyScript);
         return copy;
     }
 }

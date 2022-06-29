@@ -28,12 +28,13 @@ http://localhost:8080
 Controllers configuration contains parameters:
 - URI - base uri with or without pattern
 - Method - GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
-- Function mode - CREATE, READ, UPDATE, DELETE
+- Function mode - CREATE, READ, UPDATE, DELETE, GROOVY
 - Answer - need for init data in controller collection or specify static returning data
 - GenerateId - flag for POST method. Should generate id or should use from body request
 - GenerateIdPatterns - UUID, Sequence. It is used if generateId is true.
 - DelayMs - time to delay answer
 
+##### CRUD controllers
 Controller works in 2 modes:
 
 - Static - return specified data from 'answer' or request body that you send.
@@ -65,7 +66,18 @@ Example collection configuration:
 | UPDATE        |/test/{id}|/test/{id}     |              |           |                  | Update record by id. Rewrite id in body json from url value                    |
 | DELETE        |/test/{id}|/test/{id}     |              |           |                  | Delete record by id                                                            |
 
-### Configuration routers
+##### Groovy controller
+You can configure groovy controller with your code.
+
+In code you can use several variables:
+- body - request body
+- uri - uri of controller
+- [controllerData](core/src/main/java/io/github/ivanrosw/fakerest/core/model/ControllerData.java) - collection with data for all collection controllers
+- [jsonUtils](core/src/main/java/io/github/ivanrosw/fakerest/core/utils/JsonUtils.java) - utils to work with json
+
+Groovy code should return [GroovyAnswer](core/src/main/java/io/github/ivanrosw/fakerest/core/model/GroovyAnswer.java)
+
+#### Configuration routers
 Routers configuration contains parameters:
 - URI - base uri with or without pattern
 - Method - GET, POST, PUT, DELETE

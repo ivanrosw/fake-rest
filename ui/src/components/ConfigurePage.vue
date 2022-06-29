@@ -34,6 +34,7 @@
             <option>READ</option>
             <option>UPDATE</option>
             <option>DELETE</option>
+            <option>GROOVY</option>
           </select>
 
           <p>Information Mode</p>
@@ -47,33 +48,40 @@
           <input v-if="cSaveInfoMode === 'Collection'" type="text" v-model="cUri" placeholder="/example/{id-name}/{id-name2}"
                  v-on:input="calculateControllerIdsFromUri"/>
 
-          <p>Answer</p>
-          <input type="text" v-model="cAnswer" placeholder="Enter static answer"/>
+          <div v-if="cFunctionMode !== 'GROOVY'">
+            <p>Answer</p>
+            <input type="text" v-model="cAnswer" placeholder="Enter static answer"/>
 
-          <div v-if="cFunctionMode === 'CREATE' && cSaveInfoMode === 'Collection'">
-            <p>Generate id</p>
-            <select v-model="cGenerateId">
-              <option :value="true">Yes</option>
-              <option :value="false">No</option>
-            </select>
-            <div v-if="cGenerateId === true">
-              <p>Id patterns</p>
-              <table class="configuration-table">
-                <thead>
-                <th>Id</th>
-                <th>Pattern</th>
-                </thead>
-                <tbody v-for="(id, index) in cIdParams" v-bind:key="index">
-                <td>{{ id }}</td>
-                <td>
-                  <select v-model="cIdPatterns[index]">
-                    <option>UUID</option>
-                    <option>SEQUENCE</option>
-                  </select>
-                </td>
-                </tbody>
-              </table>
+            <div v-if="cFunctionMode === 'CREATE' && cSaveInfoMode === 'Collection'">
+              <p>Generate id</p>
+              <select v-model="cGenerateId">
+                <option :value="true">Yes</option>
+                <option :value="false">No</option>
+              </select>
+              <div v-if="cGenerateId === true">
+                <p>Id patterns</p>
+                <table class="configuration-table">
+                  <thead>
+                  <th>Id</th>
+                  <th>Pattern</th>
+                  </thead>
+                  <tbody v-for="(id, index) in cIdParams" v-bind:key="index">
+                  <td>{{ id }}</td>
+                  <td>
+                    <select v-model="cIdPatterns[index]">
+                      <option>UUID</option>
+                      <option>SEQUENCE</option>
+                    </select>
+                  </td>
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
+
+          <div v-if="cFunctionMode === 'GROOVY'">
+            <p>Groovy script</p>
+            <textarea v-model="cGroovyScript"/>
           </div>
 
           <p>Delay ms</p>
@@ -127,6 +135,10 @@
             <option>POST</option>
             <option>PUT</option>
             <option>DELETE</option>
+            <option>HEAD</option>
+            <option>PATCH</option>
+            <option>OPTIONS</option>
+            <option>TRACE</option>
           </select>
 
           <p>Uri</p>
@@ -195,6 +207,7 @@ export default {
       cGenerateId: true,
       cIdParams: [],
       cIdPatterns: [],
+      cGroovyScript: '',
 
       rId: -1,
       rUri: '',
@@ -241,6 +254,7 @@ export default {
       this.cGenerateId = true
       this.cIdParams = []
       this.cIdPatterns = []
+      this.cGroovyScript = ''
     },
 
     setDefaultRouterValues() {
@@ -307,6 +321,7 @@ export default {
     },
 
     async submitController() {
+      console.log(this.cGroovyScript)
       let idParamsPatterns = new Map()
       if (this.cId && this.cId >= 0) {
         let controllerIndex = this.findIndexById(this.cId, this.controllers)
@@ -328,6 +343,9 @@ export default {
       }
       if (this.cAnswer && this.cAnswer.length > 0) {
         controller.answer = this.cAnswer
+      }
+      if (this.cGroovyScript && this.cGroovyScript.length > 0) {
+        controller.groovyScript = this.cGroovyScript
       }
 
       let url = 'http://' + this.getCurrentHost() + '/api/conf/mapping/controller'
@@ -374,6 +392,7 @@ export default {
         this.cIdParams = idParamsPatterns.keys()
         this.cIdPatterns = idParamsPatterns.values()
       }
+      this.cGroovyScript = controller.groovyScript
       this.confControllerVisible = true
     },
 
