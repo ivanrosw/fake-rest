@@ -528,7 +528,6 @@ export default {
 .configuration-table tr:hover {background-color: #ddd;}
 
 .configuration-table th {
-
   text-align: left;
   background-color: #4f452b;
   color: white;
