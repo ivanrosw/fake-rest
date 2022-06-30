@@ -434,15 +434,19 @@ public class MappingConfigurator {
             throw new ConfigException(String.format("Controller with id [%s] not exist", id));
         }
         UriConfigHolder<ControllerConfig> configHolder = controllers.get(id);
+        ControllerConfig conf = configHolder.getConfig();
 
-        if (yamlConfigurator.isControllerExist(configHolder.getConfig())) {
-            yamlConfigurator.deleteController(configHolder.getConfig());
+        if (yamlConfigurator.isControllerExist(conf)) {
+            yamlConfigurator.deleteController(conf);
         }
 
         unregisterMapping(configHolder);
-        List<String> urls = methodsUrls.get(configHolder.getConfig().getMethod());
+        List<String> urls = methodsUrls.get(conf.getMethod());
         urls.removeAll(configHolder.getUsedUrls());
         controllers.remove(id);
+
+        ControllerSaveInfoMode mode = identifyMode(conf, conf.getIdParams());
+        if (mode == ControllerSaveInfoMode.COLLECTION) controllerData.deleteControllerData(conf.getUri());
         log.info("Unregistered controllers. Method: [{}], Urls: {}", configHolder.getConfig().getMethod(), configHolder.getUsedUrls());
     }
 
