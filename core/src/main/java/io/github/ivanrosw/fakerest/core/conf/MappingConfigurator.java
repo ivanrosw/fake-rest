@@ -139,7 +139,8 @@ public class MappingConfigurator {
         }
 
         List<String> urls = methodsUrls.computeIfAbsent(conf.getMethod(), key -> new ArrayList<>());
-        if (urls.contains(conf.getUri()) || (mode == ControllerSaveInfoMode.COLLECTION && urls.contains(httpUtils.getBaseUri(conf.getUri())))) {
+        if (urls.contains(conf.getUri()) ||
+                (conf.getFunctionMode() == ControllerFunctionMode.READ && mode == ControllerSaveInfoMode.COLLECTION && urls.contains(httpUtils.getBaseUri(conf.getUri())))) {
             throw new ConfigException(String.format("Controller: Duplicated urls: %s", conf.getUri()));
         }
     }

@@ -1,14 +1,12 @@
 package io.github.ivanrosw.fakerest.core;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.ivanrosw.fakerest.core.conf.YamlConfigurator;
 import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
 import io.github.ivanrosw.fakerest.core.utils.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -47,8 +45,6 @@ class ControllersTests {
 	private RestClient restClient;
 	@Autowired
 	private JsonUtils jsonUtils;
-	@MockBean
-	private YamlConfigurator yamlConfigurator;
 
 	@BeforeEach
 	void init() throws Exception {
