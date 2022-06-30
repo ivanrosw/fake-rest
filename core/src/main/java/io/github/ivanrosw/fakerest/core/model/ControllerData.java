@@ -54,6 +54,10 @@ public class ControllerData {
         getDataCollection(url).remove(key);
     }
 
+    public void deleteControllerData(String url) {
+        allData.remove(url);
+    }
+
     private Map<String, ObjectNode> getDataCollection(String url) {
         Map<String, ObjectNode> result;
         if (allData.containsKey(url)) {
