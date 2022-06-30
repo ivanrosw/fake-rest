@@ -67,6 +67,20 @@
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 			<version>3.0.11</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-test</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-test-junit5</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy-testng</artifactId>
+				</exclusion>
+			</exclusions>
 			<type>pom</type>
 		</dependency>
 
@@ -124,8 +138,8 @@
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<sourceFile>LICENSE</sourceFile>
-							<destinationFile>appbuild/target/LICENSE</destinationFile>
+							<sourceFile>${maven.multiModuleProjectDirectory}/LICENSE</sourceFile>
+							<destinationFile>${maven.multiModuleProjectDirectory}/appbuild/target/LICENSE</destinationFile>
 						</configuration>
 					</execution>
 				</executions>
