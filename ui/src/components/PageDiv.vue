@@ -12,7 +12,8 @@ export default {
 
 <style scoped>
 .main-div {
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   margin-left: 15%;
   margin-right: 15%;
   padding-left: 3%;
