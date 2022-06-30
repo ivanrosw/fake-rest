@@ -138,8 +138,8 @@
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<sourceFile>${project.basedir}/LICENSE</sourceFile>
-							<destinationFile>${project.basedir}/appbuild/target/LICENSE</destinationFile>
+							<sourceFile>${maven.multiModuleProjectDirectory}/LICENSE</sourceFile>
+							<destinationFile>${maven.multiModuleProjectDirectory}/appbuild/target/LICENSE</destinationFile>
 						</configuration>
 					</execution>
 				</executions>
