@@ -39,19 +39,19 @@ export default {
 .navigation-menu {
   display: block;
   position: fixed;
-  left: 86%;
-  height: 90%;
-  width: 100%;
+  left: 86vw;
+  height: 90vh;
+  width: 30%;
   z-index: 99999;
 }
 
 .navigation-menu-open-button {
-  position: fixed;
   background: #4F452BFF;
-  height: 4vh;
-  width: 4vh;
-  margin-top: 0.4%;
-  margin-left: 11%;
+  height: 4vw;
+  width: 4vw;
+  margin-top: 0.4vh;
+  margin-left: 9vw;
+  margin-bottom: 2vw;
   z-index: 199999;
   border: 1px solid rgba(0,0,0,0.0);
   border-radius: 0.4em;
@@ -65,20 +65,19 @@ export default {
 .navigation-menu-open-block-container {
   height: 100%;
   width: 100%;
-  margin-top: 23%;
 }
 
 .navigation-menu-open-button-block {
-  height: 11%;
-  width: 80%;
-  margin-left: 11%;
-  margin-top: 10%;
+  height: 0.5vw;
+  width: 3.2vw;
+  margin-top: 0.6vw;
+  margin-left: 0.4vw;
   background: rgb(255, 255, 255);
 }
 
 .navigation-menu-list {
-  margin-top: 6vh;
   padding: 0;
+  margin: 0;
   height: 100%;
   width: 100%;
   background-image: linear-gradient(to right bottom, #2c2617, #4f452b, #746641, #9c8958, #c6ae70);
@@ -118,12 +117,10 @@ export default {
   background: none;
   cursor: pointer;
   width: 100%;
-  height: 1.7em;
   transition: background-color 600ms ease-out 100ms;
   font-family: 'Lato', sans-serif;
   font-size: 2.2vw;
   text-align: left;
-  text-indent: 1%;
   color: white;
 }
 
