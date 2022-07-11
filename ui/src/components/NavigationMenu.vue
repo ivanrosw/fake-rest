@@ -47,8 +47,8 @@ export default {
 
 .navigation-menu-open-button {
   background: #4F452BFF;
-  height: 4vw;
-  width: 4vw;
+  height: min(5vw, 50px);
+  width: min(5vw, 50px);
   margin-top: 0.4vh;
   margin-left: 9vw;
   margin-bottom: 2vw;
@@ -68,10 +68,10 @@ export default {
 }
 
 .navigation-menu-open-button-block {
-  height: 0.5vw;
-  width: 3.2vw;
-  margin-top: 0.6vw;
-  margin-left: 0.4vw;
+  height: min(0.7vw, 7px);
+  width: min(4vw, 40px);
+  margin-top: min(0.7vw, 7px);
+  margin-left: min(0.5vw, 5px);
   background: rgb(255, 255, 255);
 }
 
