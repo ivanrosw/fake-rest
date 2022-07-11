@@ -1,17 +1,17 @@
 <template>
   <NavigationMenu/>
   <PageDiv>
-    <div class="configuration-table-container">
+    <div class="main-div-content">
       <h1 class="header">Configure</h1>
 
       <!-- Controllers -->
       <div class="flex-form">
         <h3 class="header">Controllers</h3>
-        <div class="configuration-button-add configuration-button" v-on:click="clickAddController()">
+        <div class="configuration-button-add configuration-button-square" v-on:click="clickAddController">
           <p>+</p>
         </div>
         <form class="add-config-form" @submit="submitApiController" v-if="confControllerVisible">
-          <div class="configuration-button" v-on:click="confControllerVisible = !confControllerVisible">
+          <div class="configuration-button-square" v-on:click="confControllerVisible = !confControllerVisible">
             <p>x</p>
           </div>
 
@@ -86,7 +86,7 @@
           <p>Delay ms</p>
           <input type="number" v-model="cDelayMs" placeholder="0"/>
           <br>
-          <input type="submit" value="Submit" class="configuration-button-submit">
+          <input type="submit" value="Submit" class="configuration-button-full-text">
         </form>
       </div>
 
@@ -104,10 +104,10 @@
             <td>{{ controller.uri }}</td>
             <td>
               <div class="flex-form">
-                <div class="configuration-button" v-on:click="updateApiController(index)">
+                <div class="configuration-button-square" v-on:click="updateApiController(index)">
                   <p>u</p>
                 </div>
-                <div class="configuration-button" v-on:click="removeApiController(index)">
+                <div class="configuration-button-square" v-on:click="removeApiController(index)">
                   <p>x</p>
                 </div>
               </div>
@@ -119,11 +119,11 @@
       <!-- Routers -->
       <div class="flex-form">
         <h3 class="header">Routers</h3>
-        <div class="configuration-button-add configuration-button" v-on:click="clickAddRouter()">
+        <div class="configuration-button-add configuration-button-square" v-on:click="clickAddRouter">
           <p>+</p>
         </div>
         <form class="add-config-form" @submit="submitApiRouter" v-if="confRouterVisible">
-          <div class="configuration-button" v-on:click="confRouterVisible = !confRouterVisible">
+          <div class="configuration-button-square" v-on:click="confRouterVisible = !confRouterVisible">
             <p>x</p>
           </div>
 
@@ -144,7 +144,7 @@
           <p>To Url</p>
           <input type="text" v-model="rToUrl" placeholder="/example"/>
           <br>
-          <input type="submit" value="Submit" class="configuration-button-submit">
+          <input type="submit" value="Submit" class="configuration-button-full-text">
         </form>
       </div>
 
@@ -164,10 +164,10 @@
           <td>{{ router.toUrl }}</td>
           <td>
             <div class="flex-form">
-              <div class="configuration-button" v-on:click="updateApiRouter(index)">
+              <div class="configuration-button-square" v-on:click="updateApiRouter(index)">
                 <p>u</p>
               </div>
-              <div class="configuration-button" v-on:click="removeApiRouter(index)">
+              <div class="configuration-button-square" v-on:click="removeApiRouter(index)">
                 <p>x</p>
               </div>
             </div>
@@ -499,105 +499,8 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  font-family: 'Merriweather', serif;
-  font-weight: bold;
-}
-
-h1 {
-  font-size: min(4vw, 40px);
-}
-
-h3 {
-  font-size: min(2vw, 20px);
-}
-
-.configuration-table-container {
-  padding-top: 5%;
-}
-
-.flex-form {
-  display: flex;
-  justify-content: space-between;
-}
-
-.configuration-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
 .configuration-button-add {
   margin-top: 1.5em !important;
-}
-
-.configuration-button{
-  margin-top: 0.4em;
-  background-color: #4f452b;
-  transition: background-color 600ms ease-out 100ms;
-  float: right;
-  height: min(3vw, 30px);
-  width: min(3vw, 30px);
-  border: 1px solid rgba(0,0,0,0.0);
-  border-radius: 0.4em;
-  cursor: pointer;
-}
-
-.configuration-button:hover {
-  background-color: rgba(79, 69, 43, 0.6);
-}
-
-.configuration-button p {
-  margin: 0;
-  padding: 0;
-  line-height: min(2.8vw, 28px);
-  text-align: center;
-  color: white;
-  font-size: min(3vw, 30px);
-  font-family: 'Lato', sans-serif;
-}
-
-.configuration-button-submit {
-  border: 1px solid rgba(0,0,0,0.0);
-  border-radius: 0.4em;
-  background-color: #4f452b;
-  color: white;
-  cursor: pointer;
-  margin-top: 0.5em;
-}
-
-.configuration-button-submit:hover {
-  background-color: rgba(79, 69, 43, 0.6);
-}
-
-.configuration-table td, .configuration-table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-.configuration-table tr:nth-child(odd){background: rgba(255, 255, 255, 1);}
-
-.configuration-table tr:nth-child(even){background: rgba(240, 240, 240, 1);}
-
-.configuration-table tr:hover {background: rgba(79, 69, 43, 0.1);}
-
-.configuration-table th {
-  text-align: left;
-  background-color: #4f452b;
-  color: white;
-  font-family: 'Merriweather', serif;
-  font-weight: normal;
-  font-size: min(1.8vw, 18px);
-}
-
-.configuration-table td {
-  text-align: left;
-  font-family: 'Lato', sans-serif;
-  font-weight: lighter;
-  font-size: min(1.7vw, 17px);
-}
-
-.configuration-table td:last-child {
-  width: 1%;
 }
 
 .add-config-form {
