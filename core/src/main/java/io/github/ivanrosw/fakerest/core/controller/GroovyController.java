@@ -20,7 +20,8 @@ public class GroovyController extends FakeController {
 
     private static final String DEFAULT_GROOVY_IMPORT = "import io.github.ivanrosw.fakerest.core.model.GroovyAnswer \n" +
                                                         "import org.springframework.http.HttpStatus \n" +
-                                                        "import io.github.ivanrosw.fakerest.core.utils.JsonUtils \n";
+                                                        "import io.github.ivanrosw.fakerest.core.utils.JsonUtils \n" +
+                                                        "import io.github.ivanrosw.fakerest.core.model.ControllerData \n";
 
     private final GroovyShell groovyShell;
 

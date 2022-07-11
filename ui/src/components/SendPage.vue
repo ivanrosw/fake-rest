@@ -1,16 +1,18 @@
 <template>
   <NavigationMenu/>
   <PageDiv>
-    <div class="send-container">
+    <div class="main-div-content">
       <h1 class="header">Send</h1>
+      <h2 class="header">Request</h2>
+
       <form class="send-form" @submit="sendRequest">
         <div class="flex-form">
-          <p>Url</p>
-          <input type="text" v-model="requestUrl" placeholder="http://localhost:8080/example"/>
-          <input type="submit" value="Send">
+          <h3 class="header">Url</h3>
+          <input type="text" v-model="requestUrl" placeholder="http://localhost:8080/example" class="url-input"/>
+          <input type="submit" value="Send" class="configuration-button-full-text send-button">
         </div>
 
-        <p>Method</p>
+        <h3 class="header">Method</h3>
         <select v-model="requestMethod">
           <option>GET</option>
           <option>POST</option>
@@ -22,8 +24,8 @@
           <option>TRACE</option>
         </select>
 
-        <p>Headers</p>
-        <table class="request-headers-table">
+        <h3 class="header">Headers</h3>
+        <table class="configuration-table">
           <thead>
             <tr>
               <th>Header</th>
@@ -40,29 +42,32 @@
                 <input v-model="header.value"/>
               </td>
               <td>
-                <div class="configuration-button" v-on:click="removeHeader(index)">
+                <div class="configuration-button-square" v-on:click="removeHeader(index)">
                   <p>x</p>
                 </div>
               </td>
             </tr>
-            <div class="configuration-button" v-on:click="addHeader">
-              <p>+</p>
-            </div>
           </tbody>
         </table>
 
-        <p>Body</p>
+        <div class="configuration-button-square" v-on:click="addHeader">
+          <p>+</p>
+        </div>
+        <br><br>
+
+        <h3 class="header">Body</h3>
         <textarea v-model="requestBody"/>
       </form>
 
-      <p>Answer</p>
-      <p>Status</p>
+      <h2 class="header">Answer</h2>
+      <h3 class="header">Status</h3>
       <input v-model="responseStatus" readonly/>
-      <p>Body</p>
+      <h3 class="header">Body</h3>
       <textarea v-model="responseBody" readonly/>
+
       <div v-if="responseHeaders.length > 0">
-        <p>Headers</p>
-        <table class="request-headers-table">
+        <p class="header">Headers</p>
+        <table class="configuration-table">
           <thead>
           <tr>
             <th>Header</th>
@@ -82,7 +87,7 @@
         </table>
       </div>
 
-      <div class="configuration-button" v-on:click="clearData">
+      <div class="configuration-button-full-text" v-on:click="clearData">
         <p>Clear</p>
       </div>
     </div>
@@ -141,15 +146,18 @@ export default {
         alert(e)
       }
     },
+
     removeHeader(index) {
       this.requestHeaders.splice(index, 1)
     },
+
     addHeader() {
       this.requestHeaders.push({
         name: '',
         value: ''
       })
     },
+
     clearData() {
       this.requestUrl = ''
       this.requestMethod = 'GET'
@@ -164,68 +172,29 @@ export default {
 </script>
 
 <style scoped>
-.send-container {
-  padding-top: 5%;
+.configuration-button-square {
+  float: left;
+}
+
+textarea {
+  width: 100%;
+}
+
+select {
+  font-size: min(1.8vw, 18px);
 }
 
 .header {
-  font-family: 'Merriweather', serif;
-  font-weight: bold
+  margin-bottom: 0.2em;
 }
 
-.flex-form {
-  display: flex;
-  justify-content: space-between;
+.send-button {
+  font-size: min(2.5vw, 25px);
 }
 
-.request-headers-table td, .request-headers-table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+.url-input {
+  width: 46vw;
+  font-size: min(1.8vw, 18px);
 
-.request-headers-table tr:nth-child(even){background-color: #f2f2f2;}
-
-.request-headers-table tr:hover {background-color: #ddd;}
-
-.request-headers-table th {
-  text-align: left;
-  background-color: #4f452b;
-  color: white;
-  font-family: 'Merriweather', serif;
-  font-weight: normal;
-}
-
-.request-headers-table td {
-  text-align: left;
-  font-family: 'Lato', sans-serif;
-  font-weight: lighter;
-}
-
-.request-headers-table td:last-child {
-  width: 1%;
-}
-
-.configuration-button{
-  background-color: #4f452b;
-  transition: background-color 600ms ease-out 100ms;
-  height: 3vh;
-  width: 3vh;
-  border: 1px solid rgba(0,0,0,0.0);
-  border-radius: 0.4em;
-  cursor: pointer;
-}
-
-.configuration-button:hover {
-  background-color: rgba(79, 69, 43, 0.6);
-}
-
-.configuration-button p {
-  margin: 0;
-  padding: 0;
-  line-height: 2.5vh;
-  text-align: center;
-  color: white;
-  font-size: 3vh;
-  font-family: 'Lato', sans-serif;
 }
 </style>
