@@ -576,9 +576,9 @@ h3 {
 
 .configuration-table tr:nth-child(odd){background: rgba(255, 255, 255, 1);}
 
-.configuration-table tr:nth-child(even){background: rgba(235, 235, 235, 1);}
+.configuration-table tr:nth-child(even){background: rgba(240, 240, 240, 1);}
 
-.configuration-table tr:hover {background: rgba(235, 235, 235, 0.6);}
+.configuration-table tr:hover {background: rgba(79, 69, 43, 0.1);}
 
 .configuration-table th {
   text-align: left;
