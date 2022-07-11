@@ -81,7 +81,7 @@ export default {
 .navigation-menu-list {
   padding: 0;
   margin: 0;
-  height: 100%;
+  height: 40%;
   width: 100%;
   background-image: linear-gradient(to right bottom, #2c2617, #4f452b, #746641, #9c8958, #c6ae70);
 }
@@ -122,7 +122,7 @@ export default {
   width: 100%;
   transition: background-color 600ms ease-out 100ms;
   font-family: 'Lato', sans-serif;
-  font-size: 2.2vw;
+  font-size: min(2.2vw, 30px);
   text-align: left;
   color: white;
   padding: 0.25em 0 0.25em 0.4em;
