@@ -7,11 +7,10 @@
       <!-- Controllers -->
       <div class="flex-form">
         <h3 class="header">Controllers</h3>
-        <div class="configuration-button-add configuration-button" v-on:click="confControllerVisible = !confControllerVisible;
-                                                                               cId = -1">
+        <div class="configuration-button-add configuration-button" v-on:click="clickAddController()">
           <p>+</p>
         </div>
-        <form class="add-config-form" @submit="submitController" v-if="confControllerVisible">
+        <form class="add-config-form" @submit="submitApiController" v-if="confControllerVisible">
           <div class="configuration-button" v-on:click="confControllerVisible = !confControllerVisible">
             <p>x</p>
           </div>
@@ -87,7 +86,7 @@
           <p>Delay ms</p>
           <input type="number" v-model="cDelayMs" placeholder="0"/>
           <br>
-          <input type="submit" value="Submit">
+          <input type="submit" value="Submit" class="configuration-button-submit">
         </form>
       </div>
 
@@ -105,10 +104,10 @@
             <td>{{ controller.uri }}</td>
             <td>
               <div class="flex-form">
-                <div class="configuration-button" v-on:click="updateController(index)">
+                <div class="configuration-button" v-on:click="updateApiController(index)">
                   <p>u</p>
                 </div>
-                <div class="configuration-button" v-on:click="removeController(index)">
+                <div class="configuration-button" v-on:click="removeApiController(index)">
                   <p>x</p>
                 </div>
               </div>
@@ -120,11 +119,10 @@
       <!-- Routers -->
       <div class="flex-form">
         <h3 class="header">Routers</h3>
-        <div class="configuration-button-add configuration-button" v-on:click="confRouterVisible = !confRouterVisible;
-                                                                               rId = -1">
+        <div class="configuration-button-add configuration-button" v-on:click="clickAddRouter()">
           <p>+</p>
         </div>
-        <form class="add-config-form" @submit="submitRouter" v-if="confRouterVisible">
+        <form class="add-config-form" @submit="submitApiRouter" v-if="confRouterVisible">
           <div class="configuration-button" v-on:click="confRouterVisible = !confRouterVisible">
             <p>x</p>
           </div>
@@ -146,7 +144,7 @@
           <p>To Url</p>
           <input type="text" v-model="rToUrl" placeholder="/example"/>
           <br>
-          <input type="submit" value="Submit">
+          <input type="submit" value="Submit" class="configuration-button-submit">
         </form>
       </div>
 
@@ -166,10 +164,10 @@
           <td>{{ router.toUrl }}</td>
           <td>
             <div class="flex-form">
-              <div class="configuration-button" v-on:click="updateRouter(index)">
+              <div class="configuration-button" v-on:click="updateApiRouter(index)">
                 <p>u</p>
               </div>
-              <div class="configuration-button" v-on:click="removeRouter(index)">
+              <div class="configuration-button" v-on:click="removeApiRouter(index)">
                 <p>x</p>
               </div>
             </div>
@@ -216,6 +214,16 @@ export default {
     }
   },
   methods: {
+    clickAddController() {
+      this.confControllerVisible = !this.confControllerVisible;
+      this.cId = -1
+    },
+
+    clickAddRouter() {
+      this.confRouterVisible = !this.confRouterVisible;
+      this.rId = -1
+    },
+
     getCurrentHost() {
       return window.location.host
     },
@@ -264,7 +272,7 @@ export default {
       this.rToUrl = ''
     },
 
-    logErrorResponse(status, responseData) {
+    logErrorApiResponse(status, responseData) {
       if (responseData) {
         alert(responseData.description)
       } else {
@@ -272,7 +280,7 @@ export default {
       }
     },
 
-    async fetchResponseJson(response) {
+    async fetchApiResponseJson(response) {
       let responseData = null
       try {
         responseData = await response.json()
@@ -293,7 +301,7 @@ export default {
         for (let i = 0; i < this.cIdParams.length; i++) {
           let id = this.cIdParams[i]
           if (checkDuplicatesArray.includes(id)) {
-            alert('Uri has duplicate ids, fix it please')
+            alert(`Uri has duplicate ids: "${id}", fix it please`)
             this.cIdParams = []
             return
           } else {
@@ -307,25 +315,24 @@ export default {
       }
     },
 
-    async getControllers() {
+    async getApiControllers() {
       let url = 'http://' + this.getCurrentHost() + '/api/conf/mapping/controller'
       let response = await fetch(url, {method: 'GET'})
-      let responseData = await this.fetchResponseJson(response)
+      let responseData = await this.fetchApiResponseJson(response)
 
       if (response.status >= 200 && response.status < 300) {
         this.controllers = responseData
         this.controllers.sort(this.compareControllers)
       } else {
-        this.logErrorResponse(response.status, responseData)
+        this.logErrorApiResponse(response.status, responseData)
       }
     },
 
-    async submitController() {
-      console.log(this.cGroovyScript)
+    async submitApiController() {
       let idParamsPatterns = new Map()
       if (this.cId && this.cId >= 0) {
         let controllerIndex = this.findIndexById(this.cId, this.controllers)
-        await this.removeController(controllerIndex)
+        await this.removeApiController(controllerIndex)
       }
 
       for (let i = 0; i < this.cIdParams.length; i++) {
@@ -356,17 +363,17 @@ export default {
               'Content-Type': 'application/json'
             }})
       if (response.status < 200 || response.status >= 300) {
-        let responseData = await this.fetchResponseJson(response)
+        let responseData = await this.fetchApiResponseJson(response)
         this.cId = -1
-        this.logErrorResponse(response.status, responseData)
+        this.logErrorApiResponse(response.status, responseData)
       } else {
         this.confControllerVisible = false
         this.setDefaultControllerValues()
-        await this.getControllers()
+        await this.getApiControllers()
       }
     },
 
-    async updateController(index) {
+    async updateApiController(index) {
       let controller = this.controllers.at(index)
       if (!controller) {
         alert('Something went wrong')
@@ -396,36 +403,36 @@ export default {
       this.confControllerVisible = true
     },
 
-    async removeController(index) {
+    async removeApiController(index) {
       let controller = this.controllers.at(index)
       let url = 'http://' + this.getCurrentHost() + '/api/conf/mapping/controller/' + controller.id
 
       let response = await fetch(url, {method: 'DELETE'})
       if (response.status < 200 || response.status > 300) {
-        let responseData = await this.fetchResponseJson(response)
-        this.logErrorResponse(response.status, responseData)
+        let responseData = await this.fetchApiResponseJson(response)
+        this.logErrorApiResponse(response.status, responseData)
       }
 
-      await this.getControllers()
+      await this.getApiControllers()
     },
 
-    async getRouters() {
+    async getApiRouters() {
       let url = 'http://' + this.getCurrentHost() + '/api/conf/mapping/router'
       let response = await fetch(url, {method: 'GET'})
-      let responseData = await this.fetchResponseJson(response)
+      let responseData = await this.fetchApiResponseJson(response)
 
       if (response.status >= 200 && response.status < 300) {
         this.routers = responseData
         this.routers = this.routers.sort(this.compareRouters)
       } else {
-        this.logErrorResponse(response.status, responseData)
+        this.logErrorApiResponse(response.status, responseData)
       }
     },
 
-    async submitRouter() {
+    async submitApiRouter() {
       if (this.rId && this.rId >= 0) {
         let routerIndex = this.findIndexById(this.rId, this.routers)
-        await this.removeRouter(routerIndex)
+        await this.removeApiRouter(routerIndex)
       }
 
       let router = {
@@ -442,17 +449,17 @@ export default {
               'Content-Type': 'application/json'
             }})
       if (response.status < 200 || response.status >= 300) {
-        let responseData = await this.fetchResponseJson(response)
+        let responseData = await this.fetchApiResponseJson(response)
         this.rId = -1
-        this.logErrorResponse(response.status, responseData)
+        this.logErrorApiResponse(response.status, responseData)
       } else {
         this.confRouterVisible = false
         this.setDefaultRouterValues()
-        await this.getRouters()
+        await this.getApiRouters()
       }
     },
 
-    async updateRouter(index) {
+    async updateApiRouter(index) {
       let router = this.routers.at(index)
       if (!router) {
         alert('Something went wrong')
@@ -467,25 +474,26 @@ export default {
       this.confRouterVisible = true
     },
 
-    async removeRouter(index) {
+    async removeApiRouter(index) {
       let router = this.routers.at(index)
       let url = 'http://' + this.getCurrentHost() + '/api/conf/mapping/router/' + router.id
 
       let response = await fetch(url, {method: 'DELETE'})
       if (response.status < 200 || response.status > 300) {
-        let responseData = await this.fetchResponseJson(response)
-        this.logErrorResponse(response.status, responseData)
+        let responseData = await this.fetchApiResponseJson(response)
+        this.logErrorApiResponse(response.status, responseData)
       }
 
-      await this.getRouters()
+      await this.getApiRouters()
     },
 
   },
 
   mounted: function() {
-    this.getControllers()
-    this.getRouters()
+    this.getApiControllers()
+    this.getApiRouters()
     this.setDefaultControllerValues()
+    this.setDefaultRouterValues()
   }
 }
 </script>
@@ -493,7 +501,15 @@ export default {
 <style scoped>
 .header {
   font-family: 'Merriweather', serif;
-  font-weight: bold
+  font-weight: bold;
+}
+
+h1 {
+  font-size: min(4vw, 40px);
+}
+
+h3 {
+  font-size: min(2vw, 20px);
 }
 
 .configuration-table-container {
@@ -511,46 +527,16 @@ export default {
 }
 
 .configuration-button-add {
-  margin-top: 1.5em;
-}
-
-.configuration-button-add p {
-  line-height: 3vh !important;
-}
-
-.configuration-table td, .configuration-table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-.configuration-table tr:nth-child(even){background-color: #f2f2f2;}
-
-.configuration-table tr:hover {background-color: #ddd;}
-
-.configuration-table th {
-  text-align: left;
-  background-color: #4f452b;
-  color: white;
-  font-family: 'Merriweather', serif;
-  font-weight: normal;
-}
-
-.configuration-table td {
-  text-align: left;
-  font-family: 'Lato', sans-serif;
-  font-weight: lighter;
-}
-
-.configuration-table td:last-child {
-  width: 1%;
+  margin-top: 1.5em !important;
 }
 
 .configuration-button{
+  margin-top: 0.4em;
   background-color: #4f452b;
   transition: background-color 600ms ease-out 100ms;
   float: right;
-  height: 3vh;
-  width: 3vh;
+  height: min(3vw, 30px);
+  width: min(3vw, 30px);
   border: 1px solid rgba(0,0,0,0.0);
   border-radius: 0.4em;
   cursor: pointer;
@@ -563,11 +549,55 @@ export default {
 .configuration-button p {
   margin: 0;
   padding: 0;
-  line-height: 2.5vh;
+  line-height: min(2.8vw, 28px);
   text-align: center;
   color: white;
-  font-size: 3vh;
+  font-size: min(3vw, 30px);
   font-family: 'Lato', sans-serif;
+}
+
+.configuration-button-submit {
+  border: 1px solid rgba(0,0,0,0.0);
+  border-radius: 0.4em;
+  background-color: #4f452b;
+  color: white;
+  cursor: pointer;
+  margin-top: 0.5em;
+}
+
+.configuration-button-submit:hover {
+  background-color: rgba(79, 69, 43, 0.6);
+}
+
+.configuration-table td, .configuration-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.configuration-table tr:nth-child(odd){background: rgba(255, 255, 255, 1);}
+
+.configuration-table tr:nth-child(even){background: rgba(235, 235, 235, 1);}
+
+.configuration-table tr:hover {background: rgba(235, 235, 235, 0.6);}
+
+.configuration-table th {
+  text-align: left;
+  background-color: #4f452b;
+  color: white;
+  font-family: 'Merriweather', serif;
+  font-weight: normal;
+  font-size: min(1.8vw, 18px);
+}
+
+.configuration-table td {
+  text-align: left;
+  font-family: 'Lato', sans-serif;
+  font-weight: lighter;
+  font-size: min(1.7vw, 17px);
+}
+
+.configuration-table td:last-child {
+  width: 1%;
 }
 
 .add-config-form {
@@ -579,8 +609,16 @@ export default {
   border-radius: 0.4em;
   color: white;
   font-family: 'Lato', sans-serif;
-  font-size: 1.4vh;
+  font-size: min(2vw, 20px);
   padding: 0.2vh 1vw 0.5vh 1vw;
+}
+
+.add-config-form input {
+  font-size: min(1.8vw, 18px);
+}
+
+.add-config-form select {
+  font-size: min(1.8vw, 18px);
 }
 
 .add-config-form p {
