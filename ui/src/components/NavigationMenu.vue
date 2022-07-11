@@ -19,6 +19,9 @@
             <button class="navigation-menu-list-element-button borders">Send</button>
           </router-link>
         </li>
+        <li class="navigation-menu-list-element">
+          <a href="https://github.com/ivanrosw/fake-rest" class="navigation-menu-list-element-button borders">Github</a>
+        </li>
       </ul>
     </transition>
   </div>
@@ -122,6 +125,12 @@ export default {
   font-size: 2.2vw;
   text-align: left;
   color: white;
+  padding: 0.25em 0 0.25em 0.4em;
+}
+
+a {
+  display: list-item;
+  text-decoration: none;
 }
 
 .navigation-menu-list-element-button:hover {
