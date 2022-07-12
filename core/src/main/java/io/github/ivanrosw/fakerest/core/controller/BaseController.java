@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Base interface to all controllers
+ * Base interface for all controllers
  */
 public interface BaseController {
 

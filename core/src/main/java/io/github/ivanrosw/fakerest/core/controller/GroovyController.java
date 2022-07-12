@@ -50,7 +50,7 @@ public class GroovyController extends FakeController {
 
             return processGroovyAnswer(groovyAnswer);
         } catch (Exception e) {
-            log.error("Controller: something goes wrong", e);
+            log.error("Controller: something went wrong", e);
             ObjectNode answer = jsonUtils.createJson();
             jsonUtils.putString(answer, DESCRIPTION_PARAM, e.getMessage());
             return new ResponseEntity<>(answer.toString(), HttpStatus.INTERNAL_SERVER_ERROR);

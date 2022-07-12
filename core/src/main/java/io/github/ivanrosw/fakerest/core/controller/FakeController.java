@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Base class to all CRUD controllers
+ * Base class for all CRUD and Groovy controllers
  */
 @Slf4j
 @SuperBuilder
