@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Base class to all controllers that can modify data in collection
+ * Base class for CUD controllers that can modify data in collection
  */
 @Slf4j
 @SuperBuilder

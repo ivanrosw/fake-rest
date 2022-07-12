@@ -27,7 +27,7 @@ import java.nio.file.Paths;
 
 /**
  * Class works with application.yml file
- * It can create or delete controllers or routers configurations in file
+ * It's can create or delete controllers or routers configurations in file
  */
 @Slf4j
 @Component

@@ -54,7 +54,7 @@ public class ControllerData {
         getDataCollection(url).remove(key);
     }
 
-    public void deleteControllerData(String url) {
+    public void deleteUrlData(String url) {
         allData.remove(url);
     }
 

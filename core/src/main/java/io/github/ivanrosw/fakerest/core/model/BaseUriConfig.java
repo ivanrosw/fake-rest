@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Base config to controllers
+ * Base config for controllers and routers
  */
 @Getter
 @Setter
