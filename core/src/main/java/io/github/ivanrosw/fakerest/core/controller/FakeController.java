@@ -35,12 +35,7 @@ public abstract class FakeController implements BaseController {
 
     protected void delay() {
         if (controllerConfig.getDelayMs() > 0) {
-            try {
-                systemUtils.sleep(controllerConfig.getDelayMs());
-            } catch (Exception e) {
-                log.error("Interrupt error", e);
-                Thread.currentThread().interrupt();
-            }
+            systemUtils.sleep(controllerConfig.getDelayMs());
         }
     }
 }
