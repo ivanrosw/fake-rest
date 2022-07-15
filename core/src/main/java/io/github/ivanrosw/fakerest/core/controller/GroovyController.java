@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class GroovyController extends FakeController {
 
+    private static final String LOG_INFO = "Got request \r\nMethod: [{}] \r\nUri: [{}] \r\nBody: [{}]";
+
     private static final String DEFAULT_GROOVY_IMPORT = "import io.github.ivanrosw.fakerest.core.model.GroovyAnswer \n" +
                                                         "import org.springframework.http.HttpStatus \n" +
                                                         "import io.github.ivanrosw.fakerest.core.utils.JsonUtils \n" +
@@ -48,6 +50,8 @@ public class GroovyController extends FakeController {
 
         try {
             String body = httpUtils.readBody(request);
+            if (log.isTraceEnabled()) log.trace(LOG_INFO, request.getMethod(), request.getRequestURI(), body);
+
             groovyShell.setVariable("body", body);
             HttpHeaders headers = httpUtils.readHeaders(request);
             groovyShell.setVariable("headers", headers);
