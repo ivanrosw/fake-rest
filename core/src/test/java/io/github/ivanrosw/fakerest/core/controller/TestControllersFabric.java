@@ -25,36 +25,31 @@ public class TestControllersFabric {
     public ReadController createStaticReadController(String uri, RequestMethod method, String answer, long delayMs) {
         ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, answer, delayMs,
                 false, null);
-        return ReadController.builder()
-                .saveInfoMode(ControllerSaveInfoMode.STATIC)
-                .controllerData(controllerData)
-                .controllerConfig(config)
-                .jsonUtils(jsonUtils)
-                .httpUtils(httpUtils).systemUtils(systemUtils).build();
+        return createReadController(config, ControllerSaveInfoMode.STATIC);
     }
 
     public ReadController createCollectionAllReadController(String uri, RequestMethod method, long delayMs) {
         ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, null, delayMs,
                 false, null);
-        return ReadController.builder()
-                .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ALL)
-                .controllerData(controllerData)
-                .controllerConfig(config)
-                .jsonUtils(jsonUtils)
-                .httpUtils(httpUtils)
-                .systemUtils(systemUtils).build();
+        return createReadController(config, ControllerSaveInfoMode.COLLECTION_ALL);
     }
 
     public ReadController createCollectionOneReadController(String uri, RequestMethod method, long delayMs) {
         ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, null, delayMs,
                 false, null);
-        return ReadController.builder()
-                .saveInfoMode(ControllerSaveInfoMode.COLLECTION_ONE)
-                .controllerData(controllerData)
-                .controllerConfig(config)
-                .jsonUtils(jsonUtils)
-                .httpUtils(httpUtils)
-                .systemUtils(systemUtils).build();
+        return createReadController(config, ControllerSaveInfoMode.COLLECTION_ONE);
+    }
+
+    public DeleteController createStaticDeleteController(String uri, RequestMethod method, String answer, long delayMs) {
+        ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.DELETE, answer, delayMs,
+                false, null);
+        return createDeleteController(config, ControllerSaveInfoMode.STATIC);
+    }
+
+    public DeleteController createCollectionOneDeleteController(String uri, RequestMethod method, long delayMs) {
+        ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.DELETE, null, delayMs,
+                false, null);
+        return createDeleteController(config, ControllerSaveInfoMode.COLLECTION_ONE);
     }
 
     private ControllerConfig createControllerConfig(String uri, RequestMethod method, ControllerFunctionMode functionMode,
@@ -71,6 +66,26 @@ public class TestControllersFabric {
         config.setIdParams(idParams);
         idParams.forEach(id -> config.getGenerateIdPatterns().put(id, GeneratorPattern.SEQUENCE));
         return config;
+    }
+
+    private ReadController createReadController(ControllerConfig config, ControllerSaveInfoMode saveInfoMode) {
+        return ReadController.builder()
+                .saveInfoMode(saveInfoMode)
+                .controllerData(controllerData)
+                .controllerConfig(config)
+                .jsonUtils(jsonUtils)
+                .httpUtils(httpUtils)
+                .systemUtils(systemUtils).build();
+    }
+
+    private DeleteController createDeleteController(ControllerConfig config, ControllerSaveInfoMode saveInfoMode) {
+        return DeleteController.builder()
+                .saveInfoMode(saveInfoMode)
+                .controllerData(controllerData)
+                .controllerConfig(config)
+                .jsonUtils(jsonUtils)
+                .httpUtils(httpUtils)
+                .systemUtils(systemUtils).build();
     }
 
 }

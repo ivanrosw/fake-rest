@@ -28,14 +28,13 @@ import static org.mockito.Mockito.*;
 abstract class CrudControllerTest {
     private static final long DELAY_MS = 10;
     static final String TEST_STATIC_URI = "/test";
-    static final String TEST_COLLECTION_ALL_URI = "/test/";
     static final String TEST_COLLECTION_URI_ONE_ID = "/test/{id}";
     static final String TEST_COLLECTION_URI_TWO_IDS = "/test/{id}/{id2}";
     static final String REQUEST_BODY = "body";
     static final String EMPTY_REQUEST_BODY = "";
 
     static final String FIRST_ID_PARAM="id";
-    static final String FIRST_ID_VALUE_ONE ="id-value";
+    static final String FIRST_ID_VALUE ="id-value";
     static final String SECOND_ID_PARAM="id2";
     static final String SECOND_ID_VALUE="id2-value";
     static final String BAD_ID_VALUE="bad-value";
@@ -51,14 +50,15 @@ abstract class CrudControllerTest {
     JsonUtils jsonUtils;
     @MockBean
     MappingConfigurationLoader mappingConfigurationLoader;
-
-    ObjectNode JSON_ONE_ID_FIRST;
-    ObjectNode JSON_ONE_ID_SECOND;
-    ObjectNode JSON_TWO_ID;
-    ObjectNode JSON_ONE_ID_FIRST_BAD;
-
     @SpyBean
     SystemUtils systemUtils;
+
+    ObjectNode JSON_ONE_ID_FIRST;
+    ObjectNode JSON_ONE_ID_FIRST_BAD;
+    ObjectNode JSON_ONE_ID_SECOND;
+    ObjectNode JSON_TWO_ID;
+    ObjectNode JSON_TWO_ID_BAD;
+
 
     private static Stream<Arguments> provideAllMethodsDelay(long delayMs) {
         RequestMethod[] requestMethods = RequestMethod.values();
@@ -87,8 +87,9 @@ abstract class CrudControllerTest {
      * Fill controller data
      */
     void fillData() {
+        clearData();
         JSON_ONE_ID_FIRST = jsonUtils.createJson();
-        jsonUtils.putString(JSON_ONE_ID_FIRST, FIRST_ID_PARAM, FIRST_ID_VALUE_ONE);
+        jsonUtils.putString(JSON_ONE_ID_FIRST, FIRST_ID_PARAM, FIRST_ID_VALUE);
         jsonUtils.putString(JSON_ONE_ID_FIRST, DATA_PARAM, FIRST_DATA_VALUE);
         String firstKey = controllerData.buildKey(JSON_ONE_ID_FIRST, Collections.singletonList(FIRST_ID_PARAM));
         controllerData.putData(TEST_COLLECTION_URI_ONE_ID, firstKey, JSON_ONE_ID_FIRST);
@@ -100,7 +101,7 @@ abstract class CrudControllerTest {
         controllerData.putData(TEST_COLLECTION_URI_ONE_ID, secondKey, JSON_ONE_ID_SECOND);
 
         JSON_TWO_ID = jsonUtils.createJson();
-        jsonUtils.putString(JSON_TWO_ID, FIRST_ID_PARAM, FIRST_ID_VALUE_ONE);
+        jsonUtils.putString(JSON_TWO_ID, FIRST_ID_PARAM, FIRST_ID_VALUE);
         jsonUtils.putString(JSON_TWO_ID, SECOND_ID_PARAM, SECOND_ID_VALUE);
         jsonUtils.putString(JSON_TWO_ID, DATA_PARAM, FIRST_DATA_VALUE);
         String keyTwo = controllerData.buildKey(JSON_TWO_ID, Arrays.asList(FIRST_ID_PARAM, SECOND_ID_PARAM));
@@ -108,6 +109,10 @@ abstract class CrudControllerTest {
 
         JSON_ONE_ID_FIRST_BAD = jsonUtils.createJson();
         jsonUtils.putString(JSON_ONE_ID_FIRST_BAD, FIRST_ID_PARAM, BAD_ID_VALUE);
+
+        JSON_TWO_ID_BAD = jsonUtils.createJson();
+        jsonUtils.putString(JSON_TWO_ID_BAD, FIRST_ID_PARAM, BAD_ID_VALUE);
+        jsonUtils.putString(JSON_TWO_ID_BAD, SECOND_ID_PARAM, BAD_ID_VALUE);
     }
 
     /**
@@ -119,13 +124,25 @@ abstract class CrudControllerTest {
     }
 
     /**
-     * Create error answer from controller
+     * Create error answer from controller with info about key not found
+     *
      * @param key - key of data
      * @return - json with description error
      */
     ObjectNode createKeyNotFoundError(String key) {
         ObjectNode result = jsonUtils.createJson();
         jsonUtils.putString(result, FakeController.DESCRIPTION_PARAM, String.format(FakeController.KEY_NOT_FOUND, key));
+        return result;
+    }
+
+    /**
+     * Create error answer from controller with info bad request
+     *
+     * @return - json with description error
+     */
+    ObjectNode createCudBadRequest() {
+        ObjectNode result = jsonUtils.createJson();
+        jsonUtils.putString(result, FakeController.DESCRIPTION_PARAM, FakeModifyController.BAD_REQUEST);
         return result;
     }
 
@@ -141,10 +158,21 @@ abstract class CrudControllerTest {
         return createRequest(method, body, headers, null);
     }
 
+    /**
+     * Create http request to send to controller
+     *
+     * @param method - request method
+     * @param body - body of request
+     * @param headers - http headers
+     * @param uriVariables - uri variables with id. example: id - id-value
+     * @return - http request
+     */
     private HttpServletRequest createRequest(RequestMethod method, String body, Map<String, String> headers, Map<String, String> uriVariables) {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(method.name());
-        request.setContent(body.getBytes());
+        if (body != null) {
+            request.setContent(body.getBytes());
+        }
         if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 request.addHeader(entry.getKey(), entry.getValue());
@@ -163,9 +191,8 @@ abstract class CrudControllerTest {
      * @param request - http request
      * @param delayMs - delay time
      * @return - response
-     * @throws InterruptedException - bcz of sleep
      */
-    ResponseEntity<String> handleResponse(FakeController fakeController, HttpServletRequest request, long delayMs) throws InterruptedException {
+    ResponseEntity<String> handleResponse(FakeController fakeController, HttpServletRequest request, long delayMs) {
         fakeController = Mockito.spy(fakeController);
 
         long now = System.currentTimeMillis();
