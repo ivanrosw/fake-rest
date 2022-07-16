@@ -52,6 +52,18 @@ public class TestControllersFabric {
         return createDeleteController(config, ControllerSaveInfoMode.COLLECTION_ONE);
     }
 
+    public CreateController createStaticCreateController(String uri, RequestMethod method, String answer, long delayMs) {
+        ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, answer, delayMs,
+                false, null);
+        return createCreateController(config, ControllerSaveInfoMode.STATIC);
+    }
+
+    public UpdateController createStaticUpdateController(String uri, RequestMethod method, String answer, long delayMs) {
+        ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, answer, delayMs,
+                false, null);
+        return createUpdateController(config, ControllerSaveInfoMode.STATIC);
+    }
+
     private ControllerConfig createControllerConfig(String uri, RequestMethod method, ControllerFunctionMode functionMode,
                                                     String answer, long delayMs, boolean generateId, String groovyScript) {
         ControllerConfig config = new ControllerConfig();
@@ -80,6 +92,26 @@ public class TestControllersFabric {
 
     private DeleteController createDeleteController(ControllerConfig config, ControllerSaveInfoMode saveInfoMode) {
         return DeleteController.builder()
+                .saveInfoMode(saveInfoMode)
+                .controllerData(controllerData)
+                .controllerConfig(config)
+                .jsonUtils(jsonUtils)
+                .httpUtils(httpUtils)
+                .systemUtils(systemUtils).build();
+    }
+
+    private CreateController createCreateController(ControllerConfig config, ControllerSaveInfoMode saveInfoMode) {
+        return CreateController.builder()
+                .saveInfoMode(saveInfoMode)
+                .controllerData(controllerData)
+                .controllerConfig(config)
+                .jsonUtils(jsonUtils)
+                .httpUtils(httpUtils)
+                .systemUtils(systemUtils).build();
+    }
+
+    private UpdateController createUpdateController(ControllerConfig config, ControllerSaveInfoMode saveInfoMode) {
+        return UpdateController.builder()
                 .saveInfoMode(saveInfoMode)
                 .controllerData(controllerData)
                 .controllerConfig(config)

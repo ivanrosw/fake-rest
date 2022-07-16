@@ -15,105 +15,31 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = FakeRestApplication.class)
-class DeleteControllerTest extends CrudControllerTest {
+class DeleteControllerTest extends FakeModifyControllerTest<DeleteController> {
 
-    void staticController_NullRequest_InternalServerError(RequestMethod requestMethod, long delayMs) {
-        DeleteController deleteController = testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, EMPTY_REQUEST_BODY, delayMs);
-        ResponseEntity<String> response = handleResponse(deleteController, null, delayMs);
-        assertNull(response.getBody());
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    @Override
+    DeleteController initStaticController_NullRequest_InternalServerError(RequestMethod requestMethod, long delayMs) {
+        return testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, EMPTY_REQUEST_BODY, delayMs);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsNoDelay")
-    void staticController_NoDelay_NullRequest_InternalServerError(RequestMethod requestMethod, long delayMs) {
-        staticController_NullRequest_InternalServerError(requestMethod, delayMs);
+    @Override
+    DeleteController initStaticController_StaticAnswer(RequestMethod requestMethod, long delayMs) {
+        return testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, REQUEST_BODY, delayMs);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsWithDelay")
-    void staticController_WithDelay_NullRequest_InternalServerError(RequestMethod requestMethod, long delayMs) {
-        staticController_NullRequest_InternalServerError(requestMethod, delayMs);
+    @Override
+    DeleteController initStaticController_BodyAnswer(RequestMethod requestMethod, long delayMs) {
+        return testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, null, delayMs);
     }
 
-    void staticController_StaticAnswer(RequestMethod requestMethod, long delayMs) {
-        DeleteController deleteController = testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, REQUEST_BODY, delayMs);
-        HttpServletRequest request = createRequest(requestMethod, EMPTY_REQUEST_BODY);
-        ResponseEntity<String> response = handleResponse(deleteController, request, delayMs);
-        assertEquals(REQUEST_BODY, response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    @Override
+    DeleteController initStaticController_EmptyRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
+        return testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, null, delayMs);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsNoDelay")
-    void staticController_NoDelay_StaticAnswer(RequestMethod requestMethod, long delayMs) {
-        staticController_StaticAnswer(requestMethod, delayMs);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsWithDelay")
-    void staticController_WithDelay_StaticAnswer(RequestMethod requestMethod, long delayMs) {
-        staticController_StaticAnswer(requestMethod, delayMs);
-    }
-
-    void staticController_BodyAnswer(RequestMethod requestMethod, long delayMs) {
-        DeleteController deleteController = testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, null, delayMs);
-        HttpServletRequest request = createRequest(requestMethod, REQUEST_BODY);
-        ResponseEntity<String> response = handleResponse(deleteController, request, delayMs);
-        assertEquals(REQUEST_BODY, response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsNoDelay")
-    void staticController_NoDelay_BodyAnswer(RequestMethod requestMethod, long delayMs) {
-        staticController_BodyAnswer(requestMethod, delayMs);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsWithDelay")
-    void staticController_WithDelay_BodyAnswer(RequestMethod requestMethod, long delayMs) {
-        staticController_BodyAnswer(requestMethod, delayMs);
-    }
-
-    void staticController_EmptyRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
-        DeleteController deleteController = testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, null, delayMs);
-        HttpServletRequest request = createRequest(requestMethod, EMPTY_REQUEST_BODY);
-        ResponseEntity<String> response = handleResponse(deleteController, request, delayMs);
-        assertEquals(createCudBadRequest().toString(), response.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsNoDelay")
-    void staticController_NoDelay_EmptyRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
-        staticController_EmptyRequestBody_BadRequest(requestMethod, delayMs);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsWithDelay")
-    void staticController_WithDelay_EmptyRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
-        staticController_EmptyRequestBody_BadRequest(requestMethod, delayMs);
-    }
-
-    void staticController_NullRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
-        DeleteController deleteController = testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, null, delayMs);
-        HttpServletRequest request = createRequest(requestMethod, null);
-        ResponseEntity<String> response = handleResponse(deleteController, request, delayMs);
-        assertEquals(createCudBadRequest().toString(), response.getBody());
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsNoDelay")
-    void staticController_NoDelay_NullRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
-        staticController_NullRequestBody_BadRequest(requestMethod, delayMs);
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideAllMethodsWithDelay")
-    void staticController_WithDelay_NullRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
-        staticController_NullRequestBody_BadRequest(requestMethod, delayMs);
+    @Override
+    DeleteController initStaticController_NullRequestBody_BadRequest(RequestMethod requestMethod, long delayMs) {
+        return testControllersFabric.createStaticDeleteController(TEST_STATIC_URI, requestMethod, null, delayMs);
     }
 
     void collectionOneControllerOneId_NotFound(RequestMethod requestMethod, long delayMs) {

@@ -19,7 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = FakeRestApplication.class)
-class ReadControllerTest extends CrudControllerTest {
+class ReadControllerTest extends FakeControllerTest {
 
     void staticController_EmptyAnswer(RequestMethod requestMethod, long delayMs) {
         ReadController readController = testControllersFabric.createStaticReadController(TEST_STATIC_URI, requestMethod, EMPTY_REQUEST_BODY, delayMs);

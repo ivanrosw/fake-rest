@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-abstract class CrudControllerTest {
+abstract class FakeControllerTest {
     private static final long DELAY_MS = 10;
     static final String TEST_STATIC_URI = "/test";
     static final String TEST_COLLECTION_URI_ONE_ID = "/test/{id}";
