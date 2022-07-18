@@ -2,6 +2,7 @@ package io.github.ivanrosw.fakerest.core.controller;
 
 import io.github.ivanrosw.fakerest.core.model.*;
 import io.github.ivanrosw.fakerest.core.utils.HttpUtils;
+import io.github.ivanrosw.fakerest.core.utils.IdGenerator;
 import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
 import io.github.ivanrosw.fakerest.core.utils.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,12 @@ public class TestControllersFabric {
         return createCreateController(config, ControllerSaveInfoMode.STATIC);
     }
 
+    public CreateController createCollectionOneCreateController(String uri, RequestMethod method, long delayMs, boolean generateId) {
+        ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, null, delayMs,
+                generateId, null);
+        return createCreateController(config, ControllerSaveInfoMode.COLLECTION_ONE);
+    }
+
     public UpdateController createStaticUpdateController(String uri, RequestMethod method, String answer, long delayMs) {
         ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, answer, delayMs,
                 false, null);
@@ -107,7 +114,8 @@ public class TestControllersFabric {
                 .controllerConfig(config)
                 .jsonUtils(jsonUtils)
                 .httpUtils(httpUtils)
-                .systemUtils(systemUtils).build();
+                .systemUtils(systemUtils)
+                .idGenerator(new IdGenerator()).build();
     }
 
     private UpdateController createUpdateController(ControllerConfig config, ControllerSaveInfoMode saveInfoMode) {

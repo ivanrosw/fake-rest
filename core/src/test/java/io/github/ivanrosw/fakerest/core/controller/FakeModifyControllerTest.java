@@ -78,7 +78,7 @@ abstract class FakeModifyControllerTest<T extends FakeModifyController> extends 
     void staticController_EmptyRequestBody_BadRequest(FakeModifyController controller, RequestMethod requestMethod, long delayMs) {
         HttpServletRequest request = createRequest(requestMethod, EMPTY_REQUEST_BODY);
         ResponseEntity<String> response = handleResponse(controller, request, delayMs);
-        assertEquals(createCudBadRequest().toString(), response.getBody());
+        assertEquals(createBadRequest(FakeModifyController.NULL_BODY_OR_ANSWER).toString(), response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -99,7 +99,7 @@ abstract class FakeModifyControllerTest<T extends FakeModifyController> extends 
     void staticController_NullRequestBody_BadRequest(FakeModifyController controller, RequestMethod requestMethod, long delayMs) {
         HttpServletRequest request = createRequest(requestMethod, null);
         ResponseEntity<String> response = handleResponse(controller, request, delayMs);
-        assertEquals(createCudBadRequest().toString(), response.getBody());
+        assertEquals(createBadRequest(FakeModifyController.NULL_BODY_OR_ANSWER).toString(), response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 

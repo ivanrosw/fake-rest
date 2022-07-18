@@ -21,7 +21,9 @@ public abstract class FakeModifyController extends FakeController {
 
     private static final String LOG_INFO = "Got request \r\nMethod: [{}] \r\nUri: [{}] \r\nBody: [{}]";
 
-    protected static final String BAD_REQUEST = "body is null and answer not specified";
+    protected static final String NULL_BODY = "body is null";
+    protected static final String NULL_BODY_OR_ANSWER = "body is null and answer not specified";
+    protected static final String MISSING_IDS = "some ids are missing";
 
     @Override
     public final ResponseEntity<String> handle(HttpServletRequest request) {
@@ -73,7 +75,7 @@ public abstract class FakeModifyController extends FakeController {
             result = new ResponseEntity<>(body, HttpStatus.OK);
         } else {
             ObjectNode badRequest = jsonUtils.createJson();
-            jsonUtils.putString(badRequest, DESCRIPTION_PARAM, BAD_REQUEST);
+            jsonUtils.putString(badRequest, DESCRIPTION_PARAM, NULL_BODY_OR_ANSWER);
             result = new ResponseEntity<>(badRequest.toString(), HttpStatus.BAD_REQUEST);
         }
         return result;

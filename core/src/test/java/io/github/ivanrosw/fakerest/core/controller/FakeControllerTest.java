@@ -32,6 +32,7 @@ abstract class FakeControllerTest {
     static final String TEST_COLLECTION_URI_TWO_IDS = "/test/{id}/{id2}";
     static final String REQUEST_BODY = "body";
     static final String EMPTY_REQUEST_BODY = "";
+    static final String EMPTY_JSON_BODY = "{}";
 
     static final String FIRST_ID_PARAM="id";
     static final String FIRST_ID_VALUE ="id-value";
@@ -53,11 +54,14 @@ abstract class FakeControllerTest {
     @SpyBean
     SystemUtils systemUtils;
 
+    ObjectNode JSON_NO_ID;
     ObjectNode JSON_ONE_ID_FIRST;
     ObjectNode JSON_ONE_ID_FIRST_BAD;
     ObjectNode JSON_ONE_ID_SECOND;
+    ObjectNode JSON_ONE_ID_EMPTY_ID;
     ObjectNode JSON_TWO_ID;
     ObjectNode JSON_TWO_ID_BAD;
+    ObjectNode JSON_TWO_ID_EMPTY_ID;
 
 
     private static Stream<Arguments> provideAllMethodsDelay(long delayMs) {
@@ -84,28 +88,37 @@ abstract class FakeControllerTest {
     }
 
     /**
-     * Fill controller data
+     * Init and fill controller data
      */
     void fillData() {
         clearData();
+        initData();
+        String firstKey = controllerData.buildKey(JSON_ONE_ID_FIRST, Collections.singletonList(FIRST_ID_PARAM));
+        controllerData.putData(TEST_COLLECTION_URI_ONE_ID, firstKey, JSON_ONE_ID_FIRST);
+
+        String secondKey = controllerData.buildKey(JSON_ONE_ID_SECOND, Collections.singletonList(FIRST_ID_PARAM));
+        controllerData.putData(TEST_COLLECTION_URI_ONE_ID, secondKey, JSON_ONE_ID_SECOND);
+
+        String keyTwo = controllerData.buildKey(JSON_TWO_ID, Arrays.asList(FIRST_ID_PARAM, SECOND_ID_PARAM));
+        controllerData.putData(TEST_COLLECTION_URI_TWO_IDS, keyTwo, JSON_TWO_ID);
+    }
+
+    /**
+     * Init controller data
+     */
+    void initData() {
         JSON_ONE_ID_FIRST = jsonUtils.createJson();
         jsonUtils.putString(JSON_ONE_ID_FIRST, FIRST_ID_PARAM, FIRST_ID_VALUE);
         jsonUtils.putString(JSON_ONE_ID_FIRST, DATA_PARAM, FIRST_DATA_VALUE);
-        String firstKey = controllerData.buildKey(JSON_ONE_ID_FIRST, Collections.singletonList(FIRST_ID_PARAM));
-        controllerData.putData(TEST_COLLECTION_URI_ONE_ID, firstKey, JSON_ONE_ID_FIRST);
 
         JSON_ONE_ID_SECOND = jsonUtils.createJson();
         jsonUtils.putString(JSON_ONE_ID_SECOND, FIRST_ID_PARAM, SECOND_ID_VALUE);
         jsonUtils.putString(JSON_ONE_ID_SECOND, DATA_PARAM, SECOND_DATA_VALUE);
-        String secondKey = controllerData.buildKey(JSON_ONE_ID_SECOND, Collections.singletonList(FIRST_ID_PARAM));
-        controllerData.putData(TEST_COLLECTION_URI_ONE_ID, secondKey, JSON_ONE_ID_SECOND);
 
         JSON_TWO_ID = jsonUtils.createJson();
         jsonUtils.putString(JSON_TWO_ID, FIRST_ID_PARAM, FIRST_ID_VALUE);
         jsonUtils.putString(JSON_TWO_ID, SECOND_ID_PARAM, SECOND_ID_VALUE);
         jsonUtils.putString(JSON_TWO_ID, DATA_PARAM, FIRST_DATA_VALUE);
-        String keyTwo = controllerData.buildKey(JSON_TWO_ID, Arrays.asList(FIRST_ID_PARAM, SECOND_ID_PARAM));
-        controllerData.putData(TEST_COLLECTION_URI_TWO_IDS, keyTwo, JSON_TWO_ID);
 
         JSON_ONE_ID_FIRST_BAD = jsonUtils.createJson();
         jsonUtils.putString(JSON_ONE_ID_FIRST_BAD, FIRST_ID_PARAM, BAD_ID_VALUE);
@@ -113,6 +126,18 @@ abstract class FakeControllerTest {
         JSON_TWO_ID_BAD = jsonUtils.createJson();
         jsonUtils.putString(JSON_TWO_ID_BAD, FIRST_ID_PARAM, BAD_ID_VALUE);
         jsonUtils.putString(JSON_TWO_ID_BAD, SECOND_ID_PARAM, BAD_ID_VALUE);
+
+        JSON_NO_ID = jsonUtils.createJson();
+        jsonUtils.putString(JSON_NO_ID, DATA_PARAM, FIRST_DATA_VALUE);
+
+        JSON_ONE_ID_EMPTY_ID = jsonUtils.createJson();
+        jsonUtils.putString(JSON_ONE_ID_EMPTY_ID, DATA_PARAM, FIRST_DATA_VALUE);
+        jsonUtils.putString(JSON_ONE_ID_EMPTY_ID, FIRST_ID_PARAM, EMPTY_REQUEST_BODY);
+
+        JSON_TWO_ID_EMPTY_ID = jsonUtils.createJson();
+        jsonUtils.putString(JSON_TWO_ID_EMPTY_ID, DATA_PARAM, FIRST_DATA_VALUE);
+        jsonUtils.putString(JSON_TWO_ID_EMPTY_ID, FIRST_ID_PARAM, EMPTY_REQUEST_BODY);
+        jsonUtils.putString(JSON_TWO_ID_EMPTY_ID, SECOND_ID_PARAM, EMPTY_REQUEST_BODY);
     }
 
     /**
@@ -140,9 +165,9 @@ abstract class FakeControllerTest {
      *
      * @return - json with description error
      */
-    ObjectNode createCudBadRequest() {
+    ObjectNode createBadRequest(String description) {
         ObjectNode result = jsonUtils.createJson();
-        jsonUtils.putString(result, FakeController.DESCRIPTION_PARAM, FakeModifyController.BAD_REQUEST);
+        jsonUtils.putString(result, FakeController.DESCRIPTION_PARAM, description);
         return result;
     }
 
@@ -150,11 +175,11 @@ abstract class FakeControllerTest {
         return createRequest(method, body, null, null);
     }
 
-    HttpServletRequest createRequestVariables(RequestMethod method, String body, Map<String, String> uriVariables) {
+    HttpServletRequest createRequestWithUriVariables(RequestMethod method, String body, Map<String, String> uriVariables) {
         return createRequest(method, body, null, uriVariables);
     }
 
-    HttpServletRequest createRequestHeaders(RequestMethod method, String body, Map<String, String> headers) {
+    HttpServletRequest createRequestWithHeaders(RequestMethod method, String body, Map<String, String> headers) {
         return createRequest(method, body, headers, null);
     }
 

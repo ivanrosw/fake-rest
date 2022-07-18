@@ -132,7 +132,7 @@ class ReadControllerTest extends FakeControllerTest {
     void collectionOneControllerOneId_NotFound(RequestMethod requestMethod, long delayMs) {
         fillData();
         ReadController readController = testControllersFabric.createCollectionOneReadController(TEST_COLLECTION_URI_ONE_ID, requestMethod, delayMs);
-        HttpServletRequest request = createRequestVariables(requestMethod, EMPTY_REQUEST_BODY, Collections.singletonMap(FIRST_ID_PARAM, BAD_ID_VALUE));
+        HttpServletRequest request = createRequestWithUriVariables(requestMethod, EMPTY_REQUEST_BODY, Collections.singletonMap(FIRST_ID_PARAM, BAD_ID_VALUE));
         ResponseEntity<String> response = handleResponse(readController, request, delayMs);
         String key = controllerData.buildKey(JSON_ONE_ID_FIRST_BAD, Collections.singletonList(FIRST_ID_PARAM));
         assertEquals(createKeyNotFoundError(key).toString(), response.getBody());
@@ -154,7 +154,7 @@ class ReadControllerTest extends FakeControllerTest {
     void collectionOneControllerOneId_Found(RequestMethod requestMethod, long delayMs) {
         fillData();
         ReadController readController = testControllersFabric.createCollectionOneReadController(TEST_COLLECTION_URI_ONE_ID, requestMethod, delayMs);
-        HttpServletRequest request = createRequestVariables(requestMethod, EMPTY_REQUEST_BODY, Collections.singletonMap(FIRST_ID_PARAM, FIRST_ID_VALUE));
+        HttpServletRequest request = createRequestWithUriVariables(requestMethod, EMPTY_REQUEST_BODY, Collections.singletonMap(FIRST_ID_PARAM, FIRST_ID_VALUE));
         ResponseEntity<String> response = handleResponse(readController, request, delayMs);
         assertEquals(JSON_ONE_ID_FIRST.toString(), response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -178,7 +178,7 @@ class ReadControllerTest extends FakeControllerTest {
         Map<String, String> variables = new HashMap<>();
         variables.put(FIRST_ID_PARAM, BAD_ID_VALUE);
         variables.put(SECOND_ID_PARAM, BAD_ID_VALUE);
-        HttpServletRequest request = createRequestVariables(requestMethod, EMPTY_REQUEST_BODY, variables);
+        HttpServletRequest request = createRequestWithUriVariables(requestMethod, EMPTY_REQUEST_BODY, variables);
         ResponseEntity<String> response = handleResponse(readController, request, delayMs);
         String key = controllerData.buildKey(JSON_TWO_ID_BAD, Arrays.asList(FIRST_ID_PARAM, SECOND_ID_PARAM));
         assertEquals(createKeyNotFoundError(key).toString(), response.getBody());
@@ -203,7 +203,7 @@ class ReadControllerTest extends FakeControllerTest {
         Map<String, String> variables = new HashMap<>();
         variables.put(FIRST_ID_PARAM, FIRST_ID_VALUE);
         variables.put(SECOND_ID_PARAM, SECOND_ID_VALUE);
-        HttpServletRequest request = createRequestVariables(requestMethod, EMPTY_REQUEST_BODY, variables);
+        HttpServletRequest request = createRequestWithUriVariables(requestMethod, EMPTY_REQUEST_BODY, variables);
         ResponseEntity<String> response = handleResponse(readController, request, delayMs);
         assertEquals(JSON_TWO_ID.toString(), response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
