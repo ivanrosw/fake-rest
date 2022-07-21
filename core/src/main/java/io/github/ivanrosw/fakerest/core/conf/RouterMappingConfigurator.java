@@ -74,6 +74,9 @@ public class RouterMappingConfigurator extends MappingConfigurator {
         if (conf.getMethod() == null) {
             throw new ConfigException("Router: Method must be specified");
         }
+        if (conf.getToUrl().contains("\\")) {
+            conf.setToUrl(conf.getToUrl().replace("\\", "/"));
+        }
 
         List<String> urls = mappingConfiguratorData.getMethodsUrls().computeIfAbsent(conf.getMethod(), key -> new ArrayList<>());
         if (urls.contains(conf.getUri())) {
