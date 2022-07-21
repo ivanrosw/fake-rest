@@ -71,6 +71,12 @@ public class TestControllersFabric {
         return createUpdateController(config, ControllerSaveInfoMode.STATIC);
     }
 
+    public UpdateController createCollectionOneUpdateController(String uri, RequestMethod method, long delayMs) {
+        ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, null, delayMs,
+                false, null);
+        return createUpdateController(config, ControllerSaveInfoMode.COLLECTION_ONE);
+    }
+
     private ControllerConfig createControllerConfig(String uri, RequestMethod method, ControllerFunctionMode functionMode,
                                                     String answer, long delayMs, boolean generateId, String groovyScript) {
         ControllerConfig config = new ControllerConfig();

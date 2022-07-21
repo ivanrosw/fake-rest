@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 abstract class FakeModifyControllerTest<T extends FakeModifyController> extends FakeControllerTest {
 
-    void staticController_NullRequest_InternalServerError(FakeModifyController controller, long delayMs) {
-        ResponseEntity<String> response = handleResponse(controller, null, delayMs);
+    void staticController_NullRequest_InternalServerError(FakeModifyController subj, long delayMs) {
+        ResponseEntity<String> response = handleResponse(subj, null, delayMs);
         assertNull(response.getBody());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
@@ -33,9 +33,9 @@ abstract class FakeModifyControllerTest<T extends FakeModifyController> extends 
         staticController_NullRequest_InternalServerError(controller, delayMs);
     }
 
-    void staticController_StaticAnswer(FakeModifyController controller, RequestMethod requestMethod, long delayMs) {
+    void staticController_StaticAnswer(FakeModifyController subj, RequestMethod requestMethod, long delayMs) {
         HttpServletRequest request = createRequest(requestMethod, EMPTY_REQUEST_BODY);
-        ResponseEntity<String> response = handleResponse(controller, request, delayMs);
+        ResponseEntity<String> response = handleResponse(subj, request, delayMs);
         assertEquals(REQUEST_BODY, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -54,9 +54,9 @@ abstract class FakeModifyControllerTest<T extends FakeModifyController> extends 
         staticController_StaticAnswer(controller, requestMethod, delayMs);
     }
 
-    void staticController_BodyAnswer(FakeModifyController controller, RequestMethod requestMethod, long delayMs) {
+    void staticController_BodyAnswer(FakeModifyController subj, RequestMethod requestMethod, long delayMs) {
         HttpServletRequest request = createRequest(requestMethod, REQUEST_BODY);
-        ResponseEntity<String> response = handleResponse(controller, request, delayMs);
+        ResponseEntity<String> response = handleResponse(subj, request, delayMs);
         assertEquals(REQUEST_BODY, response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -75,9 +75,9 @@ abstract class FakeModifyControllerTest<T extends FakeModifyController> extends 
         staticController_BodyAnswer(controller, requestMethod, delayMs);
     }
 
-    void staticController_EmptyRequestBody_BadRequest(FakeModifyController controller, RequestMethod requestMethod, long delayMs) {
+    void staticController_EmptyRequestBody_BadRequest(FakeModifyController subj, RequestMethod requestMethod, long delayMs) {
         HttpServletRequest request = createRequest(requestMethod, EMPTY_REQUEST_BODY);
-        ResponseEntity<String> response = handleResponse(controller, request, delayMs);
+        ResponseEntity<String> response = handleResponse(subj, request, delayMs);
         assertEquals(createBadRequest(FakeModifyController.NULL_BODY_OR_ANSWER).toString(), response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -96,9 +96,9 @@ abstract class FakeModifyControllerTest<T extends FakeModifyController> extends 
         staticController_EmptyRequestBody_BadRequest(controller, requestMethod, delayMs);
     }
 
-    void staticController_NullRequestBody_BadRequest(FakeModifyController controller, RequestMethod requestMethod, long delayMs) {
+    void staticController_NullRequestBody_BadRequest(FakeModifyController subj, RequestMethod requestMethod, long delayMs) {
         HttpServletRequest request = createRequest(requestMethod, null);
-        ResponseEntity<String> response = handleResponse(controller, request, delayMs);
+        ResponseEntity<String> response = handleResponse(subj, request, delayMs);
         assertEquals(createBadRequest(FakeModifyController.NULL_BODY_OR_ANSWER).toString(), response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
