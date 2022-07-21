@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -315,8 +316,13 @@ class UpdateControllerTest extends FakeModifyControllerTest<UpdateController> {
     }
 
     private String getRandomString() {
-        byte[] array = new byte[10];
-        new Random().nextBytes(array);
+        char[] dictionary = new char[] {'A', 'B', 'C', 'D'};
+        char[] array = new char[10];
+        Random random = new Random();
+        for (int i = 0 ; i < array.length; i++) {
+            int dictionaryIndex = random.nextInt(dictionary.length);
+            array[i] = dictionary[dictionaryIndex];
+        }
         return new String(array);
     }
 }
