@@ -62,7 +62,7 @@ public class RouterController implements BaseController {
             result = new URI(conf.getToUrl());
         } else {
             String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-            if (conf.getToUrl().charAt(0) == '/' || conf.getToUrl().charAt(0) == '\\') {
+            if (conf.getToUrl().charAt(0) == '/') {
                 url = url + conf.getToUrl();
             } else {
                 url = url + "/" + conf.getToUrl();

@@ -206,6 +206,7 @@ abstract class FakeControllerTest {
         if (uriVariables != null) {
             request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, uriVariables);
         }
+
         return request;
     }
 

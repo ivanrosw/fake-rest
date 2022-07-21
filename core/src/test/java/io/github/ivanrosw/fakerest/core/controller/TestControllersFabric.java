@@ -1,10 +1,7 @@
 package io.github.ivanrosw.fakerest.core.controller;
 
 import io.github.ivanrosw.fakerest.core.model.*;
-import io.github.ivanrosw.fakerest.core.utils.HttpUtils;
-import io.github.ivanrosw.fakerest.core.utils.IdGenerator;
-import io.github.ivanrosw.fakerest.core.utils.JsonUtils;
-import io.github.ivanrosw.fakerest.core.utils.SystemUtils;
+import io.github.ivanrosw.fakerest.core.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +19,8 @@ public class TestControllersFabric {
     private HttpUtils httpUtils;
     @Autowired
     private SystemUtils systemUtils;
+    @Autowired
+    private RestClient restClient;
 
     public ReadController createStaticReadController(String uri, RequestMethod method, String answer, long delayMs) {
         ControllerConfig config = createControllerConfig(uri, method, ControllerFunctionMode.READ, answer, delayMs,
@@ -77,6 +76,11 @@ public class TestControllersFabric {
         return createUpdateController(config, ControllerSaveInfoMode.COLLECTION_ONE);
     }
 
+    public RouterController createRouterController(String fromUri, String toUri, RequestMethod method) {
+        RouterConfig routerConfig = createRouterConfig(fromUri, toUri, method);
+        return new RouterController(routerConfig, httpUtils, restClient);
+    }
+
     private ControllerConfig createControllerConfig(String uri, RequestMethod method, ControllerFunctionMode functionMode,
                                                     String answer, long delayMs, boolean generateId, String groovyScript) {
         ControllerConfig config = new ControllerConfig();
@@ -90,6 +94,14 @@ public class TestControllersFabric {
         List<String> idParams = httpUtils.getIdParams(uri);
         config.setIdParams(idParams);
         idParams.forEach(id -> config.getGenerateIdPatterns().put(id, GeneratorPattern.SEQUENCE));
+        return config;
+    }
+
+    private RouterConfig createRouterConfig(String uri, String toUrl, RequestMethod method) {
+        RouterConfig config = new RouterConfig();
+        config.setUri(uri);
+        config.setToUrl(toUrl);
+        config.setMethod(method);
         return config;
     }
 
