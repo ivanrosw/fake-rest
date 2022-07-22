@@ -1,8 +1,11 @@
 package io.github.ivanrosw.fakerest.core;
 
 import io.github.ivanrosw.fakerest.core.conf.ConfigException;
-import io.github.ivanrosw.fakerest.core.conf.MappingConfigurator;
+import io.github.ivanrosw.fakerest.core.conf.ControllerMappingConfigurator;
+import io.github.ivanrosw.fakerest.core.conf.MappingConfiguratorData;
+import io.github.ivanrosw.fakerest.core.conf.RouterMappingConfigurator;
 import io.github.ivanrosw.fakerest.core.model.ControllerConfig;
+import io.github.ivanrosw.fakerest.core.model.ControllerFunctionMode;
 import io.github.ivanrosw.fakerest.core.model.RouterConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +33,11 @@ class MappingConfiguratorTest {
 	private static final String NOT_EXIST_ID = "999";
 
 	@Autowired
-	private MappingConfigurator mappingConfigurator;
+	private MappingConfiguratorData mappingConfigurator;
+	@Autowired
+	private ControllerMappingConfigurator controllerMappingConfigurator;
+	@Autowired
+	private RouterMappingConfigurator routerMappingConfigurator;
 
 	@AfterEach
 	void clearConfig() throws Exception{
@@ -41,6 +48,7 @@ class MappingConfiguratorTest {
 					"  controllers:\n" +
 					"    - uri: '/test/'\n" +
 					"      method: GET\n" +
+					"      functionMode: READ\n" +
 					"  routers:\n" +
 					"    - uri: '/test'\n" +
 					"      toUrl: '/test/'\n" +
@@ -53,14 +61,15 @@ class MappingConfiguratorTest {
 		ControllerConfig config = new ControllerConfig();
 		config.setMethod(RequestMethod.GET);
 		config.setUri(NEW_URL_PATH);
-		mappingConfigurator.registerController(config);
+		config.setFunctionMode(ControllerFunctionMode.READ);
+		controllerMappingConfigurator.registerController(config);
 		assertThat(mappingConfigurator.getAllControllersCopy()).hasSize(2);
 	}
 
 	@Test
 	void testDeleteController() throws Exception {
 		assertThat(mappingConfigurator.getAllControllersCopy().size()).isOne();
-		mappingConfigurator.unregisterController(EXIST_ID);
+		controllerMappingConfigurator.unregisterController(EXIST_ID);
 		assertThat(mappingConfigurator.getAllControllersCopy()).isEmpty();
 	}
 
@@ -69,10 +78,11 @@ class MappingConfiguratorTest {
 		ControllerConfig config = new ControllerConfig();
 		config.setMethod(RequestMethod.GET);
 		config.setUri(EXIST_URL_PATH);
+		config.setFunctionMode(ControllerFunctionMode.READ);
 
 		Exception exception = null;
 		try {
-			mappingConfigurator.registerController(config);
+			controllerMappingConfigurator.registerController(config);
 		} catch (Exception e) {
 			exception = e;
 		}
@@ -83,7 +93,7 @@ class MappingConfiguratorTest {
 	void testDeleteControllerNotExist() {
 		Exception exception = null;
 		try {
-			mappingConfigurator.unregisterController(NOT_EXIST_ID);
+			controllerMappingConfigurator.unregisterController(NOT_EXIST_ID);
 		} catch (Exception e) {
 			exception = e;
 		}
@@ -96,14 +106,14 @@ class MappingConfiguratorTest {
 		routerConfig.setToUrl(EXIST_URL_PATH);
 		routerConfig.setUri(NEW_URL_PATH);
 		routerConfig.setMethod(RequestMethod.GET);
-		mappingConfigurator.registerRouter(routerConfig);
+		routerMappingConfigurator.registerRouter(routerConfig);
 		assertThat(mappingConfigurator.getAllRoutersCopy()).hasSize(2);
 	}
 
 	@Test
 	void testDeleteRouterOk() throws Exception {
 		assertThat(mappingConfigurator.getAllRoutersCopy().size()).isOne();
-		mappingConfigurator.unregisterRouter(EXIST_ID);
+		routerMappingConfigurator.unregisterRouter(EXIST_ID);
 		assertThat(mappingConfigurator.getAllRoutersCopy()).isEmpty();
 	}
 
@@ -116,7 +126,7 @@ class MappingConfiguratorTest {
 
 		Exception exception = null;
 		try {
-			mappingConfigurator.registerRouter(routerConfig);
+			routerMappingConfigurator.registerRouter(routerConfig);
 		} catch (Exception e) {
 			exception = e;
 		}
@@ -127,7 +137,7 @@ class MappingConfiguratorTest {
 	void testDeleteRouterNotExist() {
 		Exception exception = null;
 		try {
-			mappingConfigurator.unregisterRouter(NOT_EXIST_ID);
+			routerMappingConfigurator.unregisterRouter(NOT_EXIST_ID);
 		} catch (Exception e) {
 			exception = e;
 		}

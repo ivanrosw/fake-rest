@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Bean contains all data for Controllers with mode {@link io.github.ivanrosw.fakerest.core.model.ControllerMode#COLLECTION}
+ * Bean contains all data for Controllers with mode {@link ControllerSaveInfoMode#COLLECTION}
  * And methods to work with data
  */
 
@@ -52,6 +52,10 @@ public class ControllerData {
 
     public void deleteData(String url, String key) {
         getDataCollection(url).remove(key);
+    }
+
+    public void deleteUrlData(String url) {
+        allData.remove(url);
     }
 
     private Map<String, ObjectNode> getDataCollection(String url) {

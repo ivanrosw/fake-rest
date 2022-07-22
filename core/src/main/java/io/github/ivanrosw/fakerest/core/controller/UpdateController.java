@@ -10,9 +10,12 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * Controller that can update data in collection
+ */
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PutController extends FakeModifyController {
+public class UpdateController extends FakeModifyController {
 
     @Override
     protected ResponseEntity<String> handleOne(HttpServletRequest request, String body) {
@@ -25,6 +28,13 @@ public class PutController extends FakeModifyController {
         return result;
     }
 
+    /**
+     * Update data in collection
+     *
+     * @param request - request
+     * @param body - body from request
+     * @return - response
+     */
     private ResponseEntity<String> updateOne(HttpServletRequest request, String body) {
         ResponseEntity<String> result;
         ObjectNode bodyJson = jsonUtils.toObjectNode(body);
